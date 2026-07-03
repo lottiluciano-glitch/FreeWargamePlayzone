@@ -1,0 +1,9 @@
+[
+  { "id": "commander",    "name": "Commander",      "speed": 2},
+  { "id": "skirmisher",   "name": "Skirmisher", "hp": 2                       ,"weapon": "musket" },
+  { "id": "infantry",     "name": "Infantry",   "hp": 4                          ,"weapon": "musket" },
+  { "id": "guards",       "name": "Guards"    },
+  { "id": "cavalry",      "name": "Cavalry"   ,     "speed": 2,                                 "impassable":["wall"]   },
+  { "id": "dragoons",     "name": "Dragoons"  ,     "speed": 2,                                 "impassable":["wall"]    },
+  { "id": "artillery",    "name": "Artillery",                         "weapon":"lcannon",      "impassable":["wall"] , "invalidActions": ["charge","advance"] }
+]

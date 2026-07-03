@@ -1,0 +1,13 @@
+[
+  { "id": "levies",       "name": "Levies"        ,"shield": 0, "speed": 1  ,   "weapon": "spear"},
+  { "id": "infantry",     "name": "Infantry"      ,"shield": 0, "speed": 1  },
+  { "id": "spearman",     "name": "Spearman"      ,"shield": 0, "speed": 1,     "weapon": "spear"   },
+  { "id": "heavyinfantry","name": "HeavyInfantry" ,"shield": 1, "speed": 1,     "weapon": "halberd"   },
+
+  { "id": "archer",       "name": "Archer"                                                                                                            , "invalidActions": ["charge"]},
+  { "id": "crossbowman",  "name": "Crossbowman" ,                               "weapon": "crossbow"                      },
+  { "id": "cavalry",      "name": "Cavalry"                    ,"speed": 2 ,                                              "impassable":["wall"]}, 
+  { "id": "heavycavalry", "name": "HeavyCavalry"  ,"shield": 2 ,"speed": 2 ,                                              "impassable":["wall"]}, 
+  { "id": "guard",        "name": "Guard",                                      "weapon": "sword",    "n_of_attacks":2          },
+  { "id": "artillery",    "name": "Artillery",                  "speed": 1,     "weapon": "catapult", "n_of_attacks":1 , "impassable":["wall","rough"] , "invalidActions": ["charge","advance"]} 
+]

@@ -1,0 +1,6 @@
+[
+  { "id": "command",   "name": "Command"    ,"speed": 1     },
+  { "id": "infantry",  "name": "Infantry"   ,"speed": 1 },
+  { "id": "cavalry",   "name": "Cavalry"    ,"speed": 2   },
+  { "id": "artillery", "name": "Artillery"  ,"speed": 1                                         , "invalidActions": ["charge","advance"] }
+]

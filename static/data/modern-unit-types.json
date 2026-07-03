@@ -1,0 +1,13 @@
+[
+  { "id": "soldier",   "name": "Soldier"                        , "weapon": "rifle"},
+  { "id": "sniper",    "name": "Sniper"                         , "weapon": "sniper"                                                           , "invalidActions": ["charge","advance"]  },
+  { "id": "gunner",    "name": "Gunner"                         , "weapon": "grenade_launcher" },
+  { "id": "leader",    "name": "Leader"                         , "weapon": "smg" },
+  { "id": "lmg",       "name": "LMG"                            , "weapon": "lmg"    },
+  { "id": "AT",        "name": "Anti-Tank"                      , "weapon": "rpg"    },
+  { "id": "mortar",    "name": "Mortar"                         , "weapon": "lmortar"                                                          , "invalidActions": ["charge","advance"]  },
+  { "id": "bike",      "name": "Bike"           , "speed": 2    , "weapon": "smg"                           , "impassable":["wall","rough","forest"]},
+  { "id": "mobileHMG", "name": "Mobile HMG"  ,    "speed": 2    , "weapon": "hmg"                           , "impassable":["wall","rough","forest"]},
+  { "id": "tank",      "name": "Tank"       ,     "speed": 2    , "weapon": "hcannon"          ,"armor": 3  , "impassable":["wall","rough","forest"]}
+  
+]

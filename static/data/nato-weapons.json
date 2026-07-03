@@ -1,0 +1,8 @@
+[
+ 
+  
+  {"id":"rifle",            "name":"Rifle",            "damage":1, "armouredDmg":0, "range":4, "accuracy":0.70, "ammo":24, "max_ammo":24, "recoil":0.10},
+  {"id":"lcannon",          "name":"Light Cannon",     "damage":2, "armouredDmg":4, "range":5, "accuracy":0.60, "ammo":12, "max_ammo":12, "recoil":0.35},
+  {"id":"hcannon",          "name":"Heavy Cannon",     "damage":3, "armouredDmg":6, "range":8, "accuracy":0.55, "ammo":12, "max_ammo":12, "recoil":0.35}
+
+]

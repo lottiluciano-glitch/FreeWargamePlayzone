@@ -1,0 +1,14 @@
+[
+  { "id": "soldier",   "name": "Soldier"    },
+  { "id": "tank",      "name": "Tank"     ,     "speed": 2    , "weapon": "hcannon"          ,"armor": 3 , "impassable":["wall","rough","forest"]} ,
+  { "id": "mg",        "name": "MG"                                                       , "invalidActions": ["charge","advance"]},
+  { "id": "at",        "name": "AT"                                                       , "invalidActions": ["charge","advance"]},
+  { "id": "bazooka",   "name": "Bazooka"    },
+  { "id": "mortar",    "name": "Mortar"                        , "weapon": "lmortar"      , "invalidActions": ["charge","advance"]},
+  { "id": "artillery", "name": "Artillery"                                                , "invalidActions": ["charge","advance"]}
+]
+
+
+
+
+

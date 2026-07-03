@@ -1,0 +1,18 @@
+[
+  {"id":"knife",            "name":"Knife",            "damage":1, "armouredDmg":0, "range":1, "accuracy":0.80, "ammo":99, "max_ammo":99, "recoil":0.00},
+  {"id":"sword",            "name":"Sword",            "damage":2, "armouredDmg":0, "range":1, "accuracy":0.70, "ammo":99, "max_ammo":99, "recoil":0.01},
+  {"id":"scimitar",         "name":"Scimitar",         "damage":2, "armouredDmg":0, "range":1, "accuracy":0.75, "ammo":99, "max_ammo":99, "recoil":0.02},
+  {"id":"spear",            "name":"Spear",            "damage":2, "armouredDmg":0, "range":1, "accuracy":0.68, "ammo":99, "max_ammo":99, "recoil":0.05},
+  {"id":"halberd",          "name":"Halberd",          "damage":3, "armouredDmg":0, "range":1, "accuracy":0.60, "ammo":99, "max_ammo":99, "recoil":0.10},
+  {"id":"hammer",           "name":"War Hammer",       "damage":3, "armouredDmg":0, "range":1, "accuracy":0.55, "ammo":99, "max_ammo":99, "recoil":0.15},
+
+  {"id":"shortbow",         "name":"Shortbow",         "damage":1, "armouredDmg":0, "range":2, "accuracy":0.70, "ammo":16, "max_ammo":16,  "recoil":0.05},
+  {"id":"longbow",          "name":"Longbow",          "damage":2, "armouredDmg":0, "range":3, "accuracy":0.68, "ammo":16, "max_ammo":16,  "recoil":0.08},
+  {"id":"composite_bow",    "name":"Composite Bow",    "damage":2, "armouredDmg":0, "range":2, "accuracy":0.72, "ammo":16, "max_ammo":16,  "recoil":0.07},
+  {"id":"crossbow",         "name":"Crossbow",         "damage":3, "armouredDmg":0, "range":3, "accuracy":0.60, "ammo":8,  "max_ammo":8,  "recoil":0.15},
+
+  {"id":"throwing_knife",   "name":"Throwing Knife",   "damage":1, "armouredDmg":0, "range":1, "accuracy":0.75, "ammo":3,  "max_ammo":3,  "recoil":0.02},
+  {"id":"javelin",          "name":"Javelin",          "damage":2, "armouredDmg":0, "range":2, "accuracy":0.65, "ammo":2,  "max_ammo":2,  "recoil":0.10},
+  {"id":"axe_throwing",     "name":"Throwing Axe",     "damage":2, "armouredDmg":0, "range":1, "accuracy":0.60, "ammo":2,  "max_ammo":2,  "recoil":0.12},
+  {"id":"catapult",         "name":"Catapult",         "damage":4, "armouredDmg":0, "range":4, "accuracy":0.30, "ammo":6,  "max_ammo":6,  "recoil":0.20}
+]

@@ -1,0 +1,64 @@
+[
+  {
+    "_comment": "SMALL ARMS — source: Bolt Action 3rd Ed. Range scaled BA-inches/6→tiles. Shots→damage. Pen→armouredDmg (0→0, +1→1 … +7→7). Ammo estimated per weapon class."
+  },
+  {"id":"pistol",          "name":"Pistol",                  "damage":1, "armouredDmg":0, "range":1,  "accuracy":0.65, "ammo":16, "max_ammo":16, "recoil":0.08, "special":[]},
+  {"id":"rifle",           "name":"Rifle",                   "damage":1, "armouredDmg":0, "range":4,  "accuracy":0.70, "ammo":24, "max_ammo":24, "recoil":0.10, "special":[]},
+  {"id":"smg",             "name":"SMG",                     "damage":2, "armouredDmg":0, "range":2,  "accuracy":0.75, "ammo":30, "max_ammo":30, "recoil":0.12, "special":["assault"]},
+  {"id":"bar",             "name":"Automatic Rifle (BAR)",   "damage":2, "armouredDmg":0, "range":5,  "accuracy":0.70, "ammo":20, "max_ammo":20, "recoil":0.15, "special":[]},
+  {"id":"assault_rifle",   "name":"Assault Rifle",           "damage":2, "armouredDmg":0, "range":3,  "accuracy":0.72, "ammo":24, "max_ammo":24, "recoil":0.15, "special":["assault"]},
+  {"id":"shotgun",         "name":"Shotgun",                 "damage":1, "armouredDmg":0, "range":3,  "accuracy":0.65, "ammo":10, "max_ammo":10, "recoil":0.25, "special":["assault"]},
+  {"id":"lmg",             "name":"LMG",                     "damage":4, "armouredDmg":0, "range":6,  "accuracy":0.65, "ammo":10, "max_ammo":10, "recoil":0.20, "special":["team"]},
+  {"id":"vickers_k",       "name":"Vickers K Gun",           "damage":5, "armouredDmg":0, "range":6,  "accuracy":0.65, "ammo":10, "max_ammo":10, "recoil":0.22, "special":["team"]},
+  {"id":"mmg",             "name":"MMG",                     "damage":6, "armouredDmg":0, "range":6,  "accuracy":0.60, "ammo":16, "max_ammo":16, "recoil":0.28, "special":["team","fixed"]},
+
+  {
+    "_comment": "HEAVY WEAPONS — BA range 48→8, 60→10, 72→12, 84→14 tiles"
+  },
+  {"id":"hmg",             "name":"HMG",                     "damage":6, "armouredDmg":1, "range":8,  "accuracy":0.60, "ammo":16, "max_ammo":16, "recoil":0.30, "special":["team","fixed"]},
+  {"id":"autocannon_l",    "name":"Light Autocannon",        "damage":2, "armouredDmg":2, "range":8,  "accuracy":0.60, "ammo":20, "max_ammo":20, "recoil":0.30, "special":["team","fixed","he_1"]},
+  {"id":"autocannon_h",    "name":"Heavy Autocannon",        "damage":2, "armouredDmg":3, "range":12, "accuracy":0.58, "ammo":16, "max_ammo":16, "recoil":0.32, "special":["team","fixed","he_1"]},
+  {"id":"at_rifle",        "name":"Anti-tank Rifle",         "damage":1, "armouredDmg":2, "range":8,  "accuracy":0.65, "ammo":10, "max_ammo":10, "recoil":0.40, "special":["team"]},
+  {"id":"piat",            "name":"PIAT",                    "damage":1, "armouredDmg":5, "range":2,  "accuracy":0.60, "ammo":6,  "max_ammo":6,  "recoil":0.35, "special":["team","shaped_charge"]},
+  {"id":"bazooka",         "name":"Bazooka",                 "damage":1, "armouredDmg":5, "range":4,  "accuracy":0.62, "ammo":6,  "max_ammo":6,  "recoil":0.35, "special":["team","shaped_charge"]},
+  {"id":"panzerschreck",   "name":"Panzerschreck",           "damage":1, "armouredDmg":6, "range":4,  "accuracy":0.62, "ammo":6,  "max_ammo":6,  "recoil":0.35, "special":["team","shaped_charge"]},
+  {"id":"panzerfaust",     "name":"Panzerfaust",             "damage":1, "armouredDmg":6, "range":2,  "accuracy":0.65, "ammo":1,  "max_ammo":1,  "recoil":0.20, "special":["one_shot","shaped_charge"]},
+  {"id":"sturmpistole",    "name":"Sturmpistole",            "damage":1, "armouredDmg":3, "range":1,  "accuracy":0.70, "ammo":4,  "max_ammo":4,  "recoil":0.10, "special":["shaped_charge"]},
+  {"id":"flamethrower",    "name":"Flamethrower (Infantry)", "damage":3, "armouredDmg":2, "range":1,  "accuracy":0.60, "ammo":6,  "max_ammo":6,  "recoil":0.35, "special":["team","flamethrower"]},
+  {"id":"flamethrower_v",  "name":"Flamethrower (Vehicle)",  "damage":4, "armouredDmg":2, "range":2,  "accuracy":0.65, "ammo":8,  "max_ammo":8,  "recoil":0.35, "special":["flamethrower"]},
+  {"id":"vb_launcher",     "name":"VB Launcher",             "damage":2, "armouredDmg":1, "range":3,  "min_range":1,   "accuracy":0.55, "ammo":8,  "max_ammo":8,  "recoil":0.20, "special":["indirect","he_1"]},
+  {"id":"grb39_he",        "name":"GrB-39 Launcher (HE)",   "damage":2, "armouredDmg":1, "range":4,  "accuracy":0.55, "ammo":4,  "max_ammo":4,  "recoil":0.25, "special":["he_1"]},
+  {"id":"grb39_ap",        "name":"GrB-39 Launcher (AP)",   "damage":1, "armouredDmg":3, "range":4,  "accuracy":0.58, "ammo":4,  "max_ammo":4,  "recoil":0.25, "special":["shaped_charge"]},
+
+  {
+    "_comment": "MORTARS — min_range preserved. HE damage scales with template: 1'→1, 2''→2, 3''→3, 4''→4 added to base"
+  },
+  {"id":"lmortar",         "name":"Light Mortar",            "damage":2, "armouredDmg":1, "range":6,  "min_range":2,   "accuracy":0.55, "ammo":12, "max_ammo":12, "recoil":0.20, "special":["team","indirect","he_1"]},
+  {"id":"mmortar",         "name":"Medium Mortar",           "damage":3, "armouredDmg":2, "range":10, "min_range":2,   "accuracy":0.52, "ammo":10, "max_ammo":10, "recoil":0.25, "special":["team","fixed","indirect","he_2"]},
+  {"id":"hmortar",         "name":"Heavy Mortar",            "damage":4, "armouredDmg":3, "range":12, "min_range":2,   "accuracy":0.50, "ammo":8,  "max_ammo":8,  "recoil":0.30, "special":["team","fixed","indirect","he_3"]},
+  {"id":"blacker_bombard", "name":"Blacker Bombard",         "damage":3, "armouredDmg":2, "range":4,  "accuracy":0.50, "ammo":8,  "max_ammo":8,  "recoil":0.30, "special":["team","fixed","he_2"]},
+  {"id":"petard",          "name":"Petard Mortar",           "damage":5, "armouredDmg":4, "range":7,  "min_range":4,   "accuracy":0.55, "ammo":6,  "max_ammo":6,  "recoil":0.35, "special":["howitzer","he_4"]},
+
+  {
+    "_comment": "AT GUNS"
+  },
+  {"id":"at_l",            "name":"Light AT Gun",            "damage":1, "armouredDmg":4, "range":8,  "accuracy":0.60, "ammo":12, "max_ammo":12, "recoil":0.40, "special":["team","fixed","he_1"]},
+  {"id":"at_m",            "name":"Medium AT Gun",           "damage":1, "armouredDmg":5, "range":10, "accuracy":0.58, "ammo":10, "max_ammo":10, "recoil":0.42, "special":["team","fixed","he_1"]},
+  {"id":"at_h",            "name":"Heavy AT Gun",            "damage":1, "armouredDmg":6, "range":12, "accuracy":0.55, "ammo":8,  "max_ammo":8,  "recoil":0.45, "special":["team","fixed","he_2"]},
+  {"id":"at_sh",           "name":"Super-heavy AT Gun",      "damage":1, "armouredDmg":7, "range":14, "accuracy":0.52, "ammo":6,  "max_ammo":6,  "recoil":0.48, "special":["team","fixed","he_3"]},
+  {"id":"qf_17pdr",        "name":"QF 17-pdr",               "damage":1, "armouredDmg":7, "range":14, "accuracy":0.58, "ammo":6,  "max_ammo":6,  "recoil":0.48, "special":["team","fixed","he_1"]},
+
+  {
+    "_comment": "HOWITZERS — min_range from BA direct-fire minimum"
+  },
+  {"id":"howitzer_l",      "name":"Light Howitzer",          "damage":3, "armouredDmg":2, "range":8,  "min_range":5,   "accuracy":0.55, "ammo":8,  "max_ammo":8,  "recoil":0.40, "special":["team","fixed","howitzer","he_2"]},
+  {"id":"howitzer_m",      "name":"Medium Howitzer",         "damage":4, "armouredDmg":3, "range":10, "min_range":6,   "accuracy":0.52, "ammo":6,  "max_ammo":6,  "recoil":0.45, "special":["team","fixed","howitzer","he_3"]},
+  {"id":"howitzer_h",      "name":"Heavy Howitzer",          "damage":5, "armouredDmg":4, "range":12, "min_range":7,   "accuracy":0.50, "ammo":4,  "max_ammo":4,  "recoil":0.50, "special":["team","fixed","howitzer","he_4"]},
+  {"id":"qf_25pdr",        "name":"25-pdr",                  "damage":3, "armouredDmg":4, "range":8,  "min_range":5,   "accuracy":0.58, "ammo":8,  "max_ammo":8,  "recoil":0.42, "special":["team","fixed","howitzer","he_2","at_shell"]},
+  {"id":"mlauncher",       "name":"Multiple Launcher",       "damage":4, "armouredDmg":3, "range":12, "min_range":2,   "accuracy":0.45, "ammo":4,  "max_ammo":4,  "recoil":0.30, "special":["team","multiple_launcher","he_3"]},
+
+  {
+    "_comment": "MELEE"
+  },
+  {"id":"knife",           "name":"Knife",                   "damage":1, "armouredDmg":0, "range":1,  "accuracy":0.80, "ammo":99, "max_ammo":99, "recoil":0.00, "special":[]}
+]

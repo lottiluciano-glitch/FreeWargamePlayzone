@@ -1,0 +1,29 @@
+[
+  {"id":"soldier",      "name":"Soldier",              "weapon":"rifle"},
+  {"id":"officer",      "name":"Officer",              "weapon":"carbine",    "secondary_weapon":"pistol"       ,"speed":1,                                                                   "tags":["infantry","command"]},
+  {"id":"scout",        "name":"Scout",                "weapon":"smg",        "secondary_weapon":"smoke_grenade","speed":2,                                                   "visionRange":3,"tags":["infantry","recon"]},
+  {"id":"sniper",       "name":"Sniper",               "weapon":"sniper",                                       "speed":1,                                                    "visionRange":4,"tags":["infantry","specialist"],   "invalidActions":["charge","advance"]},
+  {"id":"engineer",     "name":"Engineer",             "weapon":"smg",        "secondary_weapon":"demo_charge", "speed":1,                                                                    "tags":["infantry","specialist"]},
+  {"id":"medic",        "name":"Medic",                "weapon":"pistol",                                       "speed":1,                                                                    "tags":["infantry","support"],      "invalidActions":["charge","advance"]},
+  {"id":"flamethrower", "name":"Flamethrower",         "weapon":"flamethrower",                                 "speed":1,                                                                    "tags":["infantry","specialist"]},
+  {"id":"paratrooper",  "name":"Paratrooper",          "weapon":"smg",        "secondary_weapon":"carbine",     "speed":2,                                                                    "tags":["infantry","elite"]},
+
+  {"id":"mg",           "name":"MG",                   "weapon":"hmg",                                                                                                                        "tags":["infantry","crew-served"],  "invalidActions":["charge","advance"]},
+  {"id":"at",           "name":"AT",                   "weapon":"lat_heavy",                                                                                                                  "tags":["infantry","crew-served"],  "invalidActions":["charge","advance"]},
+  {"id":"bazooka",      "name":"Bazooka",              "weapon":"lat",                                                                                                                        "tags":["infantry","specialist"]},
+  {"id":"mortar",       "name":"Mortar",               "weapon":"lmortar",                                                                                                                    "tags":["infantry","crew-served"],  "invalidActions":["charge","advance"]},
+  {"id":"hmort_crew",   "name":"Heavy Mortar Crew",    "weapon":"hmortar",                                                                                                                    "tags":["infantry","crew-served"],  "invalidActions":["charge","advance"]},
+  {"id":"aa_crew",      "name":"AA Crew",              "weapon":"aa_gun",                                                                                                                     "tags":["infantry","crew-served"],  "invalidActions":["charge","advance"]},
+  {"id":"artillery",    "name":"Artillery",            "weapon":"field_gun",                                                                                                                  "tags":["infantry","crew-served"],  "invalidActions":["charge","advance"]},
+
+  {"id":"light_tank",   "name":"Light Tank",           "weapon":"lcannon_tank","secondary_weapon":"mg_coaxial", "speed":3, "armor":1, "impassable":["wall","rough","forest"],                 "tags":["vehicle","armour"]},
+  {"id":"tank",         "name":"Tank",                 "weapon":"hcannon",    "secondary_weapon":"mg_coaxial",  "speed":2, "armor":3, "impassable":["wall","rough","forest"],                 "tags":["vehicle","armour"]},
+  {"id":"heavy_tank",   "name":"Heavy Tank",           "weapon":"hcannon",    "secondary_weapon":"mg_coaxial",  "speed":1, "armor":5, "impassable":["wall","rough","forest"],                 "tags":["vehicle","armour"]},
+  {"id":"td",           "name":"Tank Destroyer",       "weapon":"hcannon",                                      "speed":2, "armor":2, "impassable":["wall","rough","forest"],                 "tags":["vehicle","armour"]},
+  {"id":"spg",          "name":"Self-propelled Gun",   "weapon":"howitzer",                                     "speed":1, "armor":2, "impassable":["wall","rough","forest"],                 "tags":["vehicle","armour"],        "invalidActions":["charge","advance"]},
+  {"id":"halftrack",    "name":"Half-track",           "weapon":"hmg",        "secondary_weapon":"smg",         "speed":3, "armor":1, "impassable":["wall","rough","forest"], "capacity":8,   "tags":["vehicle","transport"]},
+  {"id":"armoured_car", "name":"Armoured Car",         "weapon":"lmg",        "secondary_weapon":"smg",         "speed":4, "armor":1, "impassable":["wall","rough","forest"], "visionRange":3,"tags":["vehicle","recon"]},
+
+  {"id":"jeep",         "name":"Jeep",                 "weapon":"lmg",                                          "speed":4,            "impassable":["wall","rough"],          "capacity":2,   "tags":["vehicle","transport"]},
+  {"id":"supply",       "name":"Supply Truck",                                                                  "speed":3,            "impassable":["wall","rough","forest"],                 "tags":["vehicle","logistics"],     "invalidActions":["charge","advance"]}
+]

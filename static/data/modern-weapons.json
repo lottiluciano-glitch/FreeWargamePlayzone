@@ -1,0 +1,35 @@
+[
+  {"id":"pistol",           "name":"Pistol",           "damage":1, "armouredDmg":0, "range":1, "accuracy":0.65, "ammo":16, "max_ammo":16, "recoil":0.08},
+
+  {"id":"shuriken",         "name":"Shuriken",         "damage":1, "armouredDmg":0, "range":4, "accuracy":0.70, "ammo":24, "max_ammo":24, "recoil":0.10},
+
+  {"id":"rifle",            "name":"Rifle",            "damage":1, "armouredDmg":0, "range":4, "accuracy":0.70, "ammo":24, "max_ammo":24, "recoil":0.10},
+  {"id":"smg",              "name":"SMG",              "damage":3, "armouredDmg":0, "range":2, "accuracy":0.75, "ammo":10, "max_ammo":10, "recoil":0.12},
+  {"id":"shotgun",          "name":"Shotgun",          "damage":3, "armouredDmg":0, "range":1, "accuracy":0.55, "ammo":10, "max_ammo":10, "recoil":0.25},
+
+  {"id":"dmr",              "name":"DMR",              "damage":2, "armouredDmg":0, "range":3, "accuracy":0.70, "ammo":4,  "max_ammo":4,  "recoil":0.15},
+  {"id":"sniper",           "name":"Sniper Rifle",     "damage":3, "armouredDmg":0, "range":5, "accuracy":0.80, "ammo":24, "max_ammo":24, "recoil":0.30},
+
+  {"id":"lmg",              "name":"LMG",              "damage":3, "armouredDmg":1, "range":5, "accuracy":0.65, "ammo":10, "max_ammo":10, "recoil":0.20},
+  {"id":"hmg",              "name":"Heavy MG",         "damage":4, "armouredDmg":4, "range":5, "accuracy":0.60, "ammo":16, "max_ammo":16, "recoil":0.30},
+
+  {"id":"grenade_launcher", "name":"Grenade Launcher", "damage":3, "armouredDmg":1, "range":2, "accuracy":0.50, "ammo":2,  "max_ammo":2,  "recoil":0.35},
+  {"id":"flamethrower",     "name":"Flamethrower",     "damage":4, "armouredDmg":1, "range":1, "accuracy":0.60, "ammo":6,  "max_ammo":6,  "recoil":0.35},
+  {"id":"rpg",              "name":"RPG",              "damage":1, "armouredDmg":3, "range":4, "accuracy":0.60, "ammo":2,  "max_ammo":2,  "recoil":0.35},
+  {"id":"lat",              "name":"Light AT",         "damage":1, "armouredDmg":3, "range":5, "accuracy":0.60, "ammo":12, "max_ammo":12, "recoil":0.35},
+  {"id":"lmortar",          "name":"Light Mortar",     "damage":3, "armouredDmg":2, "range":5, "accuracy":0.60, "ammo":12, "max_ammo":12, "recoil":0.35},
+
+  {"id":"lcannon",          "name":"Light Cannon",     "damage":2, "armouredDmg":4, "range":5, "accuracy":0.60, "ammo":12, "max_ammo":12, "recoil":0.35},
+  {"id":"hcannon",          "name":"Heavy Cannon",     "damage":3, "armouredDmg":6, "range":8, "accuracy":0.55, "ammo":12, "max_ammo":12, "recoil":0.35},
+
+  {"id":"knife",            "name":"Knife",            "damage":1, "armouredDmg":0, "range":1, "accuracy":0.80, "ammo":99, "max_ammo":99, "recoil":0.00},
+  {"id":"sword",            "name":"Sword",            "damage":2, "armouredDmg":0, "range":1, "accuracy":0.70, "ammo":99, "max_ammo":99, "recoil":0.01},
+  {"id":"scimitar",         "name":"Scimitar",         "damage":2, "armouredDmg":0, "range":1, "accuracy":0.75, "ammo":99, "max_ammo":99, "recoil":0.02},
+
+
+  {"id":"shortbow",         "name":"Shortbow",         "damage":1, "armouredDmg":0, "range":2, "accuracy":0.70, "ammo":16, "max_ammo":6,  "recoil":0.05},
+  {"id":"longbow",          "name":"Longbow",          "damage":2, "armouredDmg":0, "range":3, "accuracy":0.68, "ammo":16, "max_ammo":5,  "recoil":0.08},
+  {"id":"composite_bow",    "name":"Composite Bow",    "damage":2, "armouredDmg":0, "range":2, "accuracy":0.72, "ammo":16, "max_ammo":6,  "recoil":0.07},
+
+  {"id":"throwing_knife",   "name":"Throwing Knife",   "damage":1, "armouredDmg":0, "range":1, "accuracy":0.75, "ammo":3,  "max_ammo":3,  "recoil":0.02}
+]
