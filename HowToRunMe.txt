@@ -1,0 +1,535 @@
+How to run the wargame engine
+
+INTRO
+This is a Python Flask application
+To run it you need to:
+ install Python
+ open a CMD window   
+ add the Flask module 
+    -> pip install Flask 
+
+Once python and flask are installed:
+    Unzip the file in a folder of choice
+    open a CMD window
+    CD to the folder (the right folder contains the app.py file)
+    type the following:
+        python app.py
+
+This actvate the server.
+Some messages will appear on the window.
+To stop the server just press CTRL-C or close the CMD window
+NOTE: if the server is not running the web application will not work
+
+
+Now open a browser (e.g. Chrome) and type
+    localhost:5000
+
+
+
+================================================================
+        TABLETOP BATTLE SIMULATOR — USER GUIDE
+================================================================
+
+
+OVERVIEW
+--------
+This is a browser-based tactical wargame simulator. Two players
+(Red and Blue) command squads of units on a tile-based battlefield,
+taking turns to move, shoot, charge, and outmanoeuvre each other
+until one side is wiped out.
+
+The application has two main areas:
+
+  • The Editor    — design and save battlefields and unit rosters
+  • The Battle    — play out the actual game
+
+
+================================================================
+PART 1 — GETTING STARTED
+================================================================
+
+1.1  The Home Screen
+--------------------
+The home screen lists available Game Types. A Game Type groups
+related battlefield templates, scenarios, and house rules (e.g.
+"Modern", "WW2", "Medieval"). Click a Game Type to see its lobby.
+
+1.2  The Game Lobby
+--------------------
+The lobby shows:
+  • Open games    — games currently in progress
+  • Finished games — completed games, shown for reference
+
+To start a quick game using the default battlefield for that Game
+Type, type a name in the "New game" box and click Create.
+
+To start from a saved Scenario (a pre-built battlefield with unit
+placements), select a scenario from the list and click Start.
+
+To design your own battlefield first, click the Editor link.
+
+
+================================================================
+PART 2 — THE EDITOR
+================================================================
+
+The Editor lets you design a battlefield template and unit roster
+that can be saved as a Scenario or as the default template for the
+Game Type.
+
+2.1  Map Settings
+------------------
+Width / Height      Number of columns and rows on the grid.
+                    Default is 10 × 10.
+
+Tile Mode           Square (standard grid) or Hex (hexagonal grid).
+                    Hex grids use offset-column layout.
+
+Era                 Sets the weapon and unit-type catalogues used
+                    when placing units. Available eras:
+                      ⚔️  Medieval
+                      🎩  Napoleonic
+                      🪖  WW2
+                      🔫  Modern
+                      🪖  NATO
+
+Activation Mode     Controls turn structure (see Part 3).
+
+2.2  Terrain Mode
+------------------
+Click "Terrain" to enter terrain-painting mode. Select a terrain
+brush from the side panel and click tiles to paint. The available
+terrain types and their gameplay effect are:
+
+  open        Normal ground. Movement cost 1.
+  cover       Light cover. Movement cost 1. Reduces accuracy
+              against units standing here.
+  rough       Difficult terrain. Movement cost 2. Accuracy penalty.
+  forest      Dense woodland. Movement cost 2. Blocks line of sight.
+  highground  Elevated. Movement cost 1. Accuracy penalty for
+              attackers shooting uphill.
+  wall        Impassable for some units. Movement cost 2. Blocks line of sight.
+  rocks       Impassable. Movement cost ∞. Blocks line of sight.
+  water       Impassable. Movement cost ∞.
+  Streets     Various street tile variants (straight, T-junction,
+              corner, crossroads). Movement cost 0.5 — units travel
+              faster on roads.
+
+Click the Erase button to remove terrain from a tile (reverts to
+open ground).
+
+2.3  Units Mode
+----------------
+Click "Units" to switch to unit-placement mode. A panel on the
+right lists the units you have placed for each team.
+
+Placing a unit:
+  1. Select the team (Red or Blue) from the toggle.
+  2. Click a free tile on the map to place a unit there.
+     Units cannot be placed on wall or rock tiles, or on a tile
+     already occupied by another unit.
+
+Configuring a unit:
+  Click a unit in the side panel to expand its detail form.
+  Fields you can set:
+
+    Name           Display label on the battlefield.
+    Type           Unit class (e.g. Soldier, Sniper, Tank, Mortar).
+                   Changing this sets the default weapon and any
+                   movement or action restrictions for that type.
+    Figures        Number of models in the unit (a squad can have
+                   multiple figures; each figure rolls separately).
+    HP             Hit points per figure.
+    Armor          Armour value. Reduces damage from non-AP weapons.
+    Shields        Ablative shield points (absorbed before HP).
+    Attacks        Number of attack rolls per figure per action.
+    Experience     green / seasoned / veteran / elite. Affects
+                   activation thresholds and saving-throw rolls.
+    Speed          1 = standard, 2 = fast (bikes, vehicles).
+    Weapon         Select from the era's weapon catalogue.
+
+  Drag a unit on the map to reposition it.
+
+  Click "Clear Units" to remove all units.
+
+2.4  Combat Rules
+------------------
+The Combat Rules panel (below the map settings) configures the
+optional game rules for the scenario:
+
+  Traverse Friendly Units         Units can move through allied tiles.
+  Charge Traverse Friendly Units  Charging units can pass through allies.
+  Enter Enemy Tile                A unit can move into a tile occupied
+                                  by an enemy.
+  Stacking                        Multiple units may share a tile.
+  Resolution Method               weapon_stats: 
+                                    probability-based hit rolls using weapon accuracy.
+                                  experience_stats: 
+                                    D6 roll vs threshold based on experience level.
+  Saving Throws Method            no_saving: damage always applies.
+                                  standard: defender rolls to negate.
+  Friendly Fire                   NOT IMPLEMENTED.
+  Terrain Cover Bonus             Cover terrain reduces hit chance.
+  Morale Checks                   Units under fire test morale.
+  Pin Morale Checks as FUBAR      Failed morale pins the unit instead
+                                  of routing it.
+  Rout Threshold (%)              NOT IMPLEMENTED
+
+2.5  Saving
+-----------
+Save Default Template   Overwrites the baseline battlefield for
+                        this Game Type. New blank games will use
+                        this layout.
+
+Save as Scenario        Saves the current layout and unit roster
+                        under a name. Scenarios appear in the
+                        lobby and can be started directly.
+
+Scenarios can also be deleted from the lobby.
+
+
+================================================================
+PART 3 — PLAYING A BATTLE
+================================================================
+
+3.1  The Battle Screen Layout
+------------------------------
+The screen is divided into:
+
+  Top bar         Turn number, current player's turn indicator,
+                  action buttons, card hand.
+
+  Battlefield     The main grid. Units appear as sprite icons.
+                  A minimap in the corner shows the whole field
+                  at a glance; it auto-repositions (left/right)
+                  to avoid overlapping the visible area when you
+                  scroll.
+
+  Unit lists      Scrollable panels on each side list all Red
+                  and Blue units with their current HP, status,
+                  ammo, and stress.
+
+  Log             A running record of every action taken during
+                  the game.
+
+3.2  Turn Structure (Activation Modes)
+----------------------------------------
+The game supports three activation modes, set in the Editor:
+
+  IGOYGO (I Go You Go)
+      Red takes all its actions, then clicks "End Turn".
+      Blue takes all its actions, then clicks "End Turn".
+      Turn number advances after Blue ends.
+
+  Alternate
+      Players activate one unit at a time, alternating between
+      Red and Blue in a random fashion (pull from a bag). 
+      After all units of both sides have acted,
+      click "End Turn" to begin the next round. The first player
+      at the start of each round is chosen randomly.
+
+  Alternate-Check
+      Same as Alternate, but before a unit can act it must pass
+      an Activation Check: roll a D6 and meet or beat its
+      threshold (Elite 2+, Veteran 3+, Seasoned 4+, Green 5+).
+      Each point of Stress on the unit raises the threshold by 1.
+      On a failed check the unit automatically goes to Overwatch
+      and the turn passes to the other player.
+
+There is also a Begin Phase at the start of each turn that
+randomly determines the weather (Sunny, Raining, Cloudy, Stormy,
+Foggy, Windy). Weather is logged but its gameplay effect is left
+to the players' house rules.
+
+3.3  Selecting and Acting with a Unit
+--------------------------------------
+  1. Click a unit on the battlefield, or click its entry in the
+     unit list panel, to select it.
+
+  2. Available action buttons will become active in the top bar.
+     Greyed-out buttons indicate unavailable actions (e.g. no
+     ammo, or that action is invalid for this unit type).
+
+  3. Click an action button to begin that action, then click the
+     target tile or target unit as prompted.
+
+A unit can only act once per turn (its token dims after it acts).
+
+3.4  Actions Reference
+-----------------------
+
+MOVE
+  The unit moves to a tile you click. Highlighted tiles show the
+  reachable area based on the unit's Speed and terrain costs.
+  Walls, rocks, and water are impassable. Some unit types cannot
+  enter rough, forest, or wall tiles (e.g. vehicles, bikes).
+  Moving through a tile occupied by an enemy is only allowed if
+  the "Enter Enemy Tile" combat option is enabled.
+
+RUN
+  Like Move but covers more ground in one activation (uses extra
+  movement budget). The unit cannot shoot after Running.
+
+ADVANCE
+  A combined move-then-shoot action. First pick a destination to
+  move to (shorter range than a normal Move), then pick a target
+  to fire at. This lets an aggressive unit close the gap and
+  immediately engage. In experience_stats mode, Advance adds +1
+  to the required roll.
+
+CHARGE (⚡)
+  Rush an adjacent or nearby enemy for a powerful melee strike.
+  The unit moves directly toward the target and attacks in melee.
+  Snipers and Mortars cannot charge.
+
+SHOOT (Ranged)
+  Select an enemy unit within weapon range and line of sight.
+  Range is measured in tiles. Obstacles (walls, forests,
+  highground, other units) block line of sight. Cover and terrain
+  type reduce hit probability. The result is logged.
+
+  Weapon stats that affect shooting:
+    Range     Maximum tiles to target.
+    Accuracy  Base hit probability (weapon_stats mode).
+    Damage    HP removed on a successful hit (unarmoured targets).
+    Armoured  Damage dealt to armoured (armor > 0) targets.
+    Ammo      Shots remaining. When ammo reaches 0, the unit
+              cannot shoot until reloaded (not currently in-game;
+              manage manually or via house rules).
+    Recoil    Each shot adds a cumulative accuracy penalty that
+              resets at the start of your next turn.
+
+  Accuracy modifiers (weapon_stats mode):
+    Cover tile             −10 %
+    Wall / Rough tile      −20 %
+    Target is Down         −20 %
+    High Ground tile       −10 %
+    Soft cover in LOS      −10 % per cover tile in path
+
+  D6 difficulty modifiers (experience_stats mode):
+    Green shooter            +1 to required roll
+    Target in cover/woods    +1
+    Target in wall/rough     +2
+    Small unarmoured team    +1
+    Target Down              +2
+    Point-blank (range 1)    −1
+    Advance action           +1
+
+ATTACK (Melee)
+  Strike an immediately adjacent enemy. Weapon accuracy applies;
+  ranged weapons suffer a damage penalty in melee (half damage,
+  rounded down, minimum 1). Each figure in the unit rolls
+  separately. Shields on the defender absorb hits first.
+
+OVERWATCH
+  The unit holds its action and watches for enemy movement.
+  When an enemy unit moves into or through a tile within the
+  unit's weapon range and line of sight, the overwatch unit
+  fires a reaction shot automatically. The unit is marked as
+  "reacted" after firing and cannot fire again until its next
+  turn. Overwatch status resets at the start of your next turn.
+
+DOWN
+  The unit takes a prone/suppressed stance. It counts as harder
+  to hit (−20 % accuracy against it) but cannot move or attack
+  until it stands back up.
+
+RALLY
+  Remove a unit's Stress and return it to normal status. Only
+  available if the unit has accumulated stress (shown on its
+  tile badge).
+
+3.5  Damage and Casualties
+---------------------------
+When a shot or melee attack hits:
+
+  1. Damage is calculated:
+       Unarmoured target — weapon Damage value (+ 1 if attacker
+       is steady, i.e. has not fired yet this turn with certain
+       weapons).
+       Armoured target   — weapon ArmouredDmg minus target Armor,
+       minimum 1.
+
+  2. Shields (if any) absorb damage first. Cover tiles add +1
+     effective shield.
+
+  3. Remaining damage is subtracted from the target's HP.
+
+  4. If HP reaches 0 and the unit has more than one figure, one
+     figure is removed and HP resets to max. This continues
+     until the unit has no figures left.
+
+  5. A unit with 0 figures (or 0 HP with 1 figure) is eliminated
+     and removed from the battlefield.
+
+  6. Each hit adds 1 Stress to the target. Stress affects
+     Activation Checks and morale (if enabled).
+
+Saving Throws (when savingThrowsMethod = 'standard'):
+  After a hit, the defender rolls a D6. The required roll depends
+  on experience: Veteran/Elite 5+, Seasoned 4+, Green 3+. On a
+  failed roll the damage applies; on success it does not.
+
+Multi-figure units: if the number of hits in a single volley
+equals or exceeds the remaining figure count, the entire unit is
+disbanded immediately.
+
+3.6  Cards
+-----------
+Each player starts with two cards drawn from a shared deck and
+draws a replacement at the end of each turn (if the deck has
+cards remaining). Cards are shown as small icons near the unit
+list panels. How cards are played and what effect they have is
+determined by the scenario or the players' own rules; the system
+tracks hands and the deck but does not enforce card effects
+automatically.
+
+3.7  End Turn
+--------------
+Click "End Turn" (IGOYGO) or "End Round" (Alternate modes) when
+you are done with your activation. All your units reset their
+"acted" flag and recoil penalties clear. Overwatch units on the
+opposing side become ready to fire.
+
+In Alternate mode, clicking "Swap Turn" passes the activation to
+the other player without ending the round (useful for passing
+within the same round).
+
+3.8  Victory
+-------------
+The game ends automatically when all units of one side are
+eliminated. The winner is announced in the log and the game is
+marked as Finished in the lobby.
+
+If both sides wish to end the game early, they can delete it
+from the lobby.
+
+
+================================================================
+PART 4 — UNIT TYPES (MODERN ERA)
+================================================================
+
+  Soldier       Rifle. Standard infantry.
+  Sniper        Sniper Rifle. Long range, high accuracy.
+                Cannot Charge or Advance.
+  Gunner        Grenade Launcher. Short-range explosive.
+  Leader        SMG. Multi-damage close-range weapon.
+  LMG           Light Machine Gun. Long range, armour-piercing.
+  Anti-Tank     RPG. Low HP damage but effective vs armour.
+  Mortar        Light Mortar. Long range indirect fire.
+                Cannot Charge or Advance.
+  Bike          SMG. Speed 2. Cannot enter walls, rough, or forest.
+  Mobile HMG    Heavy MG. Speed 2. AP. Cannot enter walls, rough,
+                or forest.
+  Tank          Heavy Cannon. Speed 2. Armor 3. Long range, high
+                armoured damage. Cannot enter walls, rough, or
+                forest.
+
+
+================================================================
+PART 5 — WEAPON QUICK REFERENCE (MODERN ERA)
+================================================================
+
+All stats below are base values at the start of a turn.
+Recoil penalties accumulate per shot within a turn and reset
+next turn. Accuracy shown is the base hit probability before
+any terrain or recoil modifiers.
+
+  Weapon              Dmg  ArmDmg  Range  Accuracy  Ammo  Recoil
+  ─────────────────────────────────────────────────────────────
+  Pistol               1      0      1     0.65      16    0.08
+  Rifle                1      0      4     0.70      24    0.10
+  SMG                  3      0      2     0.75      10    0.12
+  Shotgun              3      0      1     0.55      10    0.25
+  DMR                  2      0      3     0.70       4    0.15
+  Sniper Rifle         3      0      5     0.80      24    0.30
+  LMG                  3      1      5     0.65      10    0.20
+  Heavy MG             4      4      5     0.60      16    0.30
+  Grenade Launcher     3      1      2     0.50       2    0.35
+  Flamethrower         4      1      1     0.60       6    0.35
+  RPG                  1      3      4     0.60       2    0.35
+  Light AT             1      3      5     0.60      12    0.35
+  Light Mortar         3      2      5     0.60      12    0.35
+  Light Cannon         2      4      5     0.60      12    0.35
+  Heavy Cannon         3      6      8     0.55      12    0.35
+  Knife                1      0      1     0.80      ∞     0.00
+  Sword                2      0      1     0.70      ∞     0.01
+  Shuriken             1      0      4     0.70      24    0.10
+
+Melee weapons (range 1) attack at full accuracy in melee.
+Ranged weapons used in melee deal half damage (minimum 1).
+
+
+================================================================
+PART 6 — TERRAIN MOVEMENT COST SUMMARY
+================================================================
+
+  Terrain       Movement cost   Notes
+  ─────────────────────────────────────────────────────────────
+  Open               1          Normal
+  Cover              1          Accuracy penalty vs occupant
+  Rough              2          —
+  Forest             2          Blocks LOS
+  High Ground        2          Blocks LOS; accuracy penalty
+  Wall            Impassable*   Blocks LOS
+  Rocks           Impassable    Blocks LOS
+  Water           Impassable    —
+  Streets           0.5         Move faster on roads
+
+Speed-2 units (bikes, vehicles) double their movement budget but
+are still restricted from entering impassable terrain and cannot
+enter rough, wall, or forest tiles at all.
+
+
+================================================================
+PART 7 — TIPS AND COMMON QUESTIONS
+================================================================
+
+Q: My unit's "Shoot" button is greyed out.
+A: Check if the unit is out of ammo (shown in the unit list
+   panel), has already acted this turn, or has a weapon with
+   range 0 or less. Some unit types (e.g. Sniper, Mortar) cannot
+   Advance; if you tried Advance, cancel and try Shoot directly.
+
+Q: The "Charge" button is greyed out.
+A: Snipers and Mortars have Charge listed as an invalid action.
+   The button will also be greyed out if the unit has already
+   acted.
+
+Q: Line of sight is blocked even though I can see the target.
+A: LOS is traced as a straight line through all intervening tiles.
+   Any wall, forest, highground, or rock tile — and any tile
+   occupied by another unit — along that line will block it.
+   Cover tiles do not block LOS but impose an accuracy penalty.
+
+Q: Can multiple units share a tile?
+A: Only if the "Stacking" combat option is enabled in the scenario.
+   When stacked, unit sprites fan out diagonally on the tile. Click
+   an individual sprite to select that specific unit.
+
+Q: How does Overwatch interact with movement?
+A: Each tile a moving unit steps through is checked against all
+   enemy units on Overwatch. If an overwatch unit has LOS and the
+   mover is within weapon range at that step, the overwatch unit
+   fires. If the shot kills or suppresses the mover, movement
+   stops. An overwatch unit fires at most once per enemy move.
+
+Q: What does Stress do?
+A: In Alternate-Check mode, each Stress point raises the unit's
+   Activation Check threshold by 1, making it harder to activate.
+   If Morale Checks are enabled, accumulated stress can also
+   trigger rout rolls. Use the Rally action to clear Stress.
+
+Q: Can I undo an action?
+A: There is no undo. The game state is saved after every action.
+   Plan carefully, and agree with your opponent before acting if
+   you are unsure.
+
+Q: How do I delete a game?
+A: From the lobby, click the Delete button next to the game.
+   This is permanent.
+
+
+================================================================
+END OF USER GUIDE
+================================================================
