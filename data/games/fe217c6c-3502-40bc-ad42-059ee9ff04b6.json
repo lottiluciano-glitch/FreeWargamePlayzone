@@ -1,0 +1,1422 @@
+{
+  "id": "fe217c6c-3502-40bc-ad42-059ee9ff04b6",
+  "name": "wood",
+  "type": "tactical",
+  "status": "open",
+  "created_at": "2026-07-02T11:35:44.179596Z",
+  "updated_at": "2026-07-02T13:26:45.149719Z",
+  "winner": null,
+  "turn": 2,
+  "current_player": "blue",
+  "turn_state": {
+    "card_played": false,
+    "begin_phase_executed": true,
+    "weather": "foggy"
+  },
+  "battlefield": {
+    "width": 10,
+    "height": 8,
+    "tileMode": "square",
+    "activationMode": "Alternate",
+    "era": "ww2",
+    "terrain": [
+      {
+        "x": 0,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "type": "forest"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "type": "forest"
+      },
+      {
+        "x": 2,
+        "y": 7,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "type": "highground"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "type": "highground"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "type": "highground"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "type": "highground"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "type": "highground"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "type": "highground"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "type": "highground"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "type": "highground"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "type": "highground"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "type": "wall"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "type": "wall"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "type": "wall"
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "type": "highground"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 2,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 4,
+        "type": "forest"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "type": "qstreet_n_w_s"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "type": "qstreet_s_e"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "type": "qstreet_n_w_s"
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "type": "qstreet_n_w_s"
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 4,
+        "y": 7,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 7,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 6,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "type": "qstreet_n_e_s"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "type": "qstreet_n_e_s"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "type": "wall"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "type": "qstreet_n_w_s"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "type": "qstreet_e_n_w"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "type": "qstreet_e_n_w"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "type": "wall"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "type": "cover"
+      }
+    ],
+    "combatOptions": {
+      "traverseFriendlyUnits": true,
+      "chargeTraverseFriendlyUnits": false,
+      "enterEnemyTile": false,
+      "stacking": false,
+      "resolutionMethod": "experience_stats",
+      "savingThrowsMethod": "experience_stats",
+      "friendlyFire": false,
+      "terrainCoverBonus": true,
+      "moraleChecks": true,
+      "pinMoraleChecksAsFUBAR": false,
+      "routThreshold": 25
+    }
+  },
+  "deck": [
+    "medkit",
+    "fortify",
+    "adrenaline",
+    "scout",
+    "grenade",
+    "smoke"
+  ],
+  "red": {
+    "units": [
+      {
+        "id": "r-75c61cf9",
+        "team": "red",
+        "name": "Red#1",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 2,
+          "y": 6
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "r-afaba53e",
+        "team": "red",
+        "name": "Red#2",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 5,
+          "y": 6
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "r-88844b17",
+        "team": "red",
+        "name": "Red#3",
+        "type": "mg",
+        "experience": "seasoned",
+        "hp": 2,
+        "max_hp": 2,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 3,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [
+          "charge",
+          "advance"
+        ],
+        "weapon": {
+          "accuracy": 0.65,
+          "ammo": 10,
+          "armouredDmg": 1,
+          "damage": 3,
+          "id": "lmg",
+          "max_ammo": 10,
+          "name": "LMG",
+          "range": 5,
+          "recoil": 0.2
+        },
+        "position": {
+          "x": 6,
+          "y": 5
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "r-312c14bc",
+        "team": "red",
+        "name": "Red#4",
+        "type": "mg",
+        "experience": "seasoned",
+        "hp": 2,
+        "max_hp": 2,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [
+          "charge",
+          "advance"
+        ],
+        "weapon": {
+          "accuracy": 0.65,
+          "ammo": 10,
+          "armouredDmg": 1,
+          "damage": 3,
+          "id": "lmg",
+          "max_ammo": 10,
+          "name": "LMG",
+          "range": 5,
+          "recoil": 0.2
+        },
+        "position": {
+          "x": 3,
+          "y": 5
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "r-f97e0594",
+        "team": "red",
+        "name": "M4 Sherman",
+        "type": "tank",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 3,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 2,
+        "impassable": [
+          "wall",
+          "rough",
+          "forest"
+        ],
+        "invalidActions": [],
+        "weapon": {
+          "id": "hcannon",
+          "name": "Heavy Cannon",
+          "damage": 3,
+          "armouredDmg": 6,
+          "range": 8,
+          "accuracy": 0.55,
+          "ammo": 10,
+          "max_ammo": 12,
+          "recoil": 0.35
+        },
+        "position": {
+          "x": 8,
+          "y": 6
+        },
+        "status": "shooted",
+        "recoil_penalty": 0.35,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false,
+        "steady": false
+      },
+      {
+        "id": "r-cfa410a6",
+        "team": "red",
+        "name": "Red#7",
+        "type": "mortar",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [
+          "charge",
+          "advance"
+        ],
+        "weapon": {
+          "accuracy": 0.6,
+          "ammo": 12,
+          "armouredDmg": 2,
+          "damage": 3,
+          "id": "lmortar",
+          "max_ammo": 12,
+          "name": "Light Mortar",
+          "range": 5,
+          "recoil": 0.35
+        },
+        "position": {
+          "x": 9,
+          "y": 6
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "r-9e78d90d",
+        "team": "red",
+        "name": "Wolverine B",
+        "type": "tank",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 3,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 2,
+        "impassable": [
+          "wall",
+          "rough",
+          "forest"
+        ],
+        "invalidActions": [],
+        "weapon": {
+          "id": "lat",
+          "name": "Light AT",
+          "damage": 1,
+          "armouredDmg": 3,
+          "range": 5,
+          "accuracy": 0.6,
+          "ammo": 10,
+          "max_ammo": 12,
+          "recoil": 0.35
+        },
+        "position": {
+          "x": 6,
+          "y": 4
+        },
+        "status": "shooted",
+        "recoil_penalty": 0.35,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false,
+        "steady": false
+      },
+      {
+        "id": "r-c24b8b0f",
+        "team": "red",
+        "name": "Red#9",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 2,
+          "y": 4
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "r-a7fd0c91",
+        "team": "red",
+        "name": "Red#10",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 1,
+          "y": 5
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "r-795a3b48",
+        "team": "red",
+        "name": "Red#11",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 6,
+          "y": 6
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "r-88442230",
+        "team": "red",
+        "name": "Red#12",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 7,
+          "y": 6
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      }
+    ],
+    "hand": [
+      "steady",
+      "harden"
+    ]
+  },
+  "blue": {
+    "units": [
+      {
+        "id": "b-8ffadfc7",
+        "team": "blue",
+        "name": "Grenadier Sq 1",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 2,
+          "y": 2
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-2b0a43cb",
+        "team": "blue",
+        "name": "Grenadier Sq 2",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 2,
+          "y": 1
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-f577089c",
+        "team": "blue",
+        "name": "Grenadier Sq 3",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 8,
+          "y": 1
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-a635f643",
+        "team": "blue",
+        "name": "Grenadier Sq 4",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 9,
+          "y": 1
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-6b1f55a1",
+        "team": "blue",
+        "name": "Grenadier Sq 8",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 9,
+          "y": 2
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-a0e8cf2a",
+        "team": "blue",
+        "name": "Grenadier Sq 7",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 8,
+          "y": 2
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 2,
+        "adrenaline": false
+      },
+      {
+        "id": "b-7f3e068d",
+        "team": "blue",
+        "name": "Grenadier Sq 6",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 1,
+          "y": 1
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-2dc99e46",
+        "team": "blue",
+        "name": "Grenadier Sq 5",
+        "type": "soldier",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 1,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 6,
+        "max_figures": 6,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "name": "Rifle",
+          "damage": 1,
+          "armouredDmg": 0,
+          "range": 4,
+          "accuracy": 0.7,
+          "ammo": 6,
+          "max_ammo": 6,
+          "recoil": 0.1
+        },
+        "position": {
+          "x": 7,
+          "y": 1
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-7639b429",
+        "team": "blue",
+        "name": "Blue#10",
+        "type": "mg",
+        "experience": "seasoned",
+        "hp": 2,
+        "max_hp": 2,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [
+          "charge",
+          "advance"
+        ],
+        "weapon": {
+          "accuracy": 0.6,
+          "ammo": 15,
+          "armouredDmg": 4,
+          "damage": 4,
+          "id": "hmg",
+          "max_ammo": 16,
+          "name": "Heavy MG",
+          "range": 5,
+          "recoil": 0.3
+        },
+        "position": {
+          "x": 4,
+          "y": 2
+        },
+        "status": "shooted",
+        "recoil_penalty": 0.3,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false,
+        "steady": false
+      },
+      {
+        "id": "b-8aa77419",
+        "team": "blue",
+        "name": "Blue#11",
+        "type": "mortar",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [
+          "charge",
+          "advance"
+        ],
+        "weapon": {
+          "accuracy": 0.6,
+          "ammo": 12,
+          "armouredDmg": 2,
+          "damage": 3,
+          "id": "lmortar",
+          "max_ammo": 12,
+          "name": "Light Mortar",
+          "range": 5,
+          "recoil": 0.35
+        },
+        "position": {
+          "x": 6,
+          "y": 2
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-50ddbf8a",
+        "team": "blue",
+        "name": "Pzkw 4 A",
+        "type": "tank",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 3,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 2,
+        "impassable": [
+          "wall",
+          "rough",
+          "forest"
+        ],
+        "invalidActions": [],
+        "weapon": {
+          "id": "hcannon",
+          "name": "Heavy Cannon",
+          "damage": 3,
+          "armouredDmg": 6,
+          "range": 8,
+          "accuracy": 0.55,
+          "ammo": 12,
+          "max_ammo": 12,
+          "recoil": 0.35
+        },
+        "position": {
+          "x": 4,
+          "y": 1
+        },
+        "status": "moved",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-21b96007",
+        "team": "blue",
+        "name": "Pzkw 4 A",
+        "type": "tank",
+        "experience": "seasoned",
+        "hp": 2,
+        "max_hp": 3,
+        "armor": 3,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 2,
+        "impassable": [
+          "wall",
+          "rough",
+          "forest"
+        ],
+        "invalidActions": [],
+        "weapon": {
+          "id": "hcannon",
+          "name": "Heavy Cannon",
+          "damage": 3,
+          "armouredDmg": 6,
+          "range": 8,
+          "accuracy": 0.55,
+          "ammo": 10,
+          "max_ammo": 12,
+          "recoil": 0.35
+        },
+        "position": {
+          "x": 4,
+          "y": 3
+        },
+        "status": "shooted",
+        "recoil_penalty": 0.35,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 1,
+        "adrenaline": false,
+        "steady": false
+      },
+      {
+        "id": "b-1e3727b2",
+        "team": "blue",
+        "name": "Stug III",
+        "type": "tank",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 3,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 2,
+        "impassable": [
+          "wall",
+          "rough",
+          "forest"
+        ],
+        "invalidActions": [],
+        "weapon": {
+          "id": "hcannon",
+          "name": "Heavy Cannon",
+          "damage": 3,
+          "armouredDmg": 6,
+          "range": 8,
+          "accuracy": 0.55,
+          "ammo": 12,
+          "max_ammo": 12,
+          "recoil": 0.35
+        },
+        "position": {
+          "x": 3,
+          "y": 2
+        },
+        "status": "normal",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      }
+    ],
+    "hand": [
+      "suppress",
+      "charge"
+    ]
+  },
+  "selected_unit_id": null,
+  "log": [
+    "Game wood created (type=tactical, 10x8).",
+    "Begin Phase started (weather: cloudy)",
+    "Begin Phase completed",
+    "Action requested: move with dices None",
+    "Red Red#3 move to wall (6,5) [cost 1/1]",
+    "Red swaps turn",
+    "Action requested: move with dices None",
+    "Blue Stug III move to highground (3,2) [cost 2/2]",
+    "Action requested: move with dices None",
+    "Blue Pzkw 4 A move to highground (3,1) [cost 2/2]",
+    "Blue swaps turn",
+    "Action requested: move with dices None",
+    "Red Red#12 move to open (7,6) [cost 1/1]",
+    "Action requested: move with dices None",
+    "Red M4 Sherman move to open (8,6) [cost 2/2]",
+    "Action requested: shoot with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 5}, {'tag': 'Att', 'sides': 6, 'value': 6}, {'tag': 'Bonus', 'sides': 4, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 5}, {'tag': 'Def', 'sides': 6, 'value': 2}], 'byTag': {'Att': 6, 'Bonus': 4, 'Def': 2}, 'total': 22}",
+    " Combat mode experience_stats Saving throws mode: experience_stats ",
+    "M4 Sherman Figure 1 Attack 1:  hits Blue#9 for 3 damage . Notes: base is D6 3+  target in forest. +1 to hit for small team target. +1 to hit for advance action.   Rolled a 5.  ",
+    "Damage roll 4 >= 4 [seasoned], DAMAGED!",
+    "Blue#9 mg is eliminated",
+    "Shooting -> killed",
+    "Red swaps turn",
+    "Action requested: move with dices None",
+    "Blue Grenadier Sq 7 move to forest (8,2) [cost 1/1]",
+    "Blue swaps turn",
+    "Action requested: move with dices None",
+    "Red Wolverine B move to qstreet_n_w_s (6,4) [cost 2.0/2]",
+    "Action requested: shoot with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 6}, {'tag': 'Att', 'sides': 6, 'value': 6}, {'tag': 'Bonus', 'sides': 4, 'value': 1}, {'tag': 'Def', 'sides': 6, 'value': 2}, {'tag': 'Def', 'sides': 6, 'value': 6}], 'byTag': {'Att': 6, 'Bonus': 1, 'Def': 6}, 'total': 21}",
+    " Combat mode experience_stats Saving throws mode: experience_stats ",
+    "Wolverine B Figure 1 Attack 1:  hits Grenadier Sq 7 for 1 damage . Notes: base is D6 3+  and target is in forest. +1 to hit for target in cover/woods. +1 to hit for advance action.   Rolled a 6.  ",
+    "Damage roll 2 < 4 [seasoned], so no damage applies!",
+    "Shooting -> hit",
+    "Red swaps turn",
+    "Action requested: move with dices None",
+    "Blue Pzkw 4 A move to hstreet_s_n (5,2) [cost 1.5/2]",
+    "Action requested: shoot with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 4}, {'tag': 'Att', 'sides': 6, 'value': 6}, {'tag': 'Bonus', 'sides': 4, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 5}, {'tag': 'Def', 'sides': 6, 'value': 1}], 'byTag': {'Att': 6, 'Bonus': 4, 'Def': 1}, 'total': 20}",
+    " Combat mode experience_stats Saving throws mode: experience_stats ",
+    "ARMORED: SHELL: 6 ARMOR: 3 ",
+    "Pzkw 4 A Figure 1 Attack 1:  hits Wolverine A for 3 damage . Notes: base is D6 3+  and target is in hstreet_s_n. +1 to hit for advance action.   Rolled a 4.  ",
+    "Damage roll 4 >= 4 [seasoned], DAMAGED!",
+    "Wolverine A tank is eliminated",
+    "Shooting -> killed",
+    "Action requested: move with dices None",
+    "Blue Grenadier Sq 5 move to forest (7,1) [cost 1/1]",
+    "Action requested: move with dices None",
+    "Blue Grenadier Sq 3 move to forest (8,1) [cost 1/1]",
+    "Action requested: move with dices None",
+    "Blue Grenadier Sq 8 move to forest (9,2) [cost 1/1]",
+    "Blue swaps turn",
+    "Action requested: move with dices None",
+    "Red Red#4 move to wall (3,5) [cost 1/1]",
+    "Action requested: run with dices None",
+    "Red Red#9 run to qstreet_e_n_w (2,4) [cost 1.5/2]",
+    "Action requested: move with dices None",
+    "Red Red#10 move to highground (1,5) [cost 1/1]",
+    "Red swaps turn",
+    "Action requested: run with dices None",
+    "Blue Blue#11 run to open (6,2) [cost 2/2]",
+    "Action requested: move with dices None",
+    "Blue Blue#10 move to highground (4,2) [cost 1/1]",
+    "Action requested: move with dices None",
+    "Blue Grenadier Sq 1 move to highground (2,2) [cost 1/1]",
+    "Blue swaps turn",
+    "Action requested: move with dices None",
+    "Red Red#1 move to highground (2,6) [cost 1/1]",
+    "Action requested: run with dices None",
+    "Red Red#2 run to hstreet_s_n (5,6) [cost 1.5/2]",
+    "Action requested: run with dices None",
+    "Red Red#11 run to open (6,6) [cost 1/2]",
+    "Red swaps turn",
+    "Action requested: move with dices None",
+    "Blue Grenadier Sq 4 move to forest (9,1) [cost 1/1]",
+    "Action requested: move with dices None",
+    "Blue Grenadier Sq 2 move to highground (2,1) [cost 1/1]",
+    "Action requested: move with dices None",
+    "Blue Grenadier Sq 6 move to forest (1,1) [cost 1/1]",
+    "Blue swaps turn",
+    "Action requested: run with dices None",
+    "Red Red#7 run to open (9,6) [cost 2/2]",
+    "Red ends turn 1",
+    "The turn start goes to red!",
+    "Begin Phase started (weather: foggy)",
+    "Begin Phase completed",
+    "Action requested: shoot with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 4}, {'tag': 'Bonus', 'sides': 4, 'value': 2}, {'tag': 'Def', 'sides': 6, 'value': 5}, {'tag': 'Def', 'sides': 6, 'value': 5}], 'byTag': {'Att': 4, 'Bonus': 2, 'Def': 5}, 'total': 16}",
+    " Combat mode experience_stats Saving throws mode: experience_stats ",
+    "M4 Sherman Figure 1 Attack 1:  hits Grenadier Sq 7 for 3 damage . Notes: base is D6 3+  and target is in forest. +1 to hit for target in cover/woods.   Rolled a 4.  ",
+    "Damage roll 2 < 4 [seasoned], so no damage applies!",
+    "Shooting -> hit",
+    "Red swaps turn",
+    "Action requested: move with dices None",
+    "Blue Pzkw 4 A move to qstreet_s_e (4,3) [cost 1.0/2]",
+    "Action requested: shoot with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 6}, {'tag': 'Att', 'sides': 6, 'value': 4}, {'tag': 'Bonus', 'sides': 4, 'value': 1}, {'tag': 'Def', 'sides': 6, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 6}], 'byTag': {'Att': 4, 'Bonus': 1, 'Def': 6}, 'total': 21}",
+    " Combat mode experience_stats Saving throws mode: experience_stats ",
+    "ARMORED: SHELL: 6 ARMOR: 3 ",
+    "Pzkw 4 A Figure 1 Attack 1:  hits Wolverine B for 3 damage . Notes: base is D6 3+  and target is in qstreet_n_w_s. +1 to hit for advance action.   Rolled a 6.  ",
+    "Damage roll 2 < 4 [seasoned], so no damage applies!",
+    "Shooting -> hit",
+    "Action requested: shoot with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 1}, {'tag': 'Bonus', 'sides': 4, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 5}], 'byTag': {'Att': 1, 'Bonus': 4, 'Def': 5}, 'total': 14}",
+    " Combat mode experience_stats Saving throws mode: experience_stats ",
+    "ARMORED: SHELL: 4 ARMOR: 3 ",
+    "Blue#10 Figure 1 Attack 1:  misses Wolverine B . Notes: base is D6 3+   Rolled a 1. ",
+    "Blue#10  misses Wolverine B ",
+    "Shooting -> miss",
+    "Action requested: move with dices None",
+    "Blue Pzkw 4 A move to highground (4,1) [cost 2/2]",
+    "Blue swaps turn",
+    "Unit Wolverine B attribute 'stress' set to 0",
+    "Action requested: shoot with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 6}, {'tag': 'Bonus', 'sides': 4, 'value': 3}, {'tag': 'Def', 'sides': 6, 'value': 1}, {'tag': 'Def', 'sides': 6, 'value': 4}], 'byTag': {'Att': 6, 'Bonus': 3, 'Def': 4}, 'total': 14}",
+    " Combat mode experience_stats Saving throws mode: experience_stats ",
+    "ARMORED: SHELL: 3 ARMOR: 3 ",
+    "Wolverine B Figure 1 Attack 1:  hits Pzkw 4 A for 1 damage . Notes: base is D6 3+   Rolled a 6.  ",
+    "Damage roll 5 >= 4 [seasoned], DAMAGED!",
+    "Shooting -> hit",
+    "Red swaps turn"
+  ],
+  "actedUnits": []
+}

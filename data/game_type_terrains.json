@@ -1,0 +1,2157 @@
+{
+  "skirmish": {
+    "width": 10,
+    "height": 6,
+    "tileMode": "square",
+    "activationMode": "IGOYGO",
+    "era": "medieval",
+    "terrain": [
+      {
+        "x": 8,
+        "y": 3,
+        "type": "highground"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 7,
+        "y": 2,
+        "type": "rocks"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "type": "forest"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "type": "wall"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "type": "rough"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "type": "rough"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "type": "rocks"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "type": "wall"
+      }
+    ],
+    "units": {
+      "red": [
+        {
+          "x": 2,
+          "y": 5,
+          "type": "artillery",
+          "n_of_attacks": 1,
+          "speed": 1,
+          "impassable": [
+            "wall",
+            "rough"
+          ],
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.3,
+            "ammo": 6,
+            "armouredDmg": 0,
+            "damage": 4,
+            "id": "catapult",
+            "max_ammo": 6,
+            "name": "Catapult",
+            "range": 4,
+            "recoil": 0.2
+          }
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "n_of_figures": 3,
+          "type": "levies",
+          "speed": 1,
+          "weapon": {
+            "accuracy": 0.68,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 2,
+            "id": "spear",
+            "max_ammo": 99,
+            "name": "Spear",
+            "range": 1,
+            "recoil": 0.05
+          }
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "type": "levies",
+          "speed": 1,
+          "weapon": {
+            "accuracy": 0.68,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 2,
+            "id": "spear",
+            "max_ammo": 99,
+            "name": "Spear",
+            "range": 1,
+            "recoil": 0.05
+          }
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "n_of_figures": 2,
+          "type": "cavalry",
+          "speed": 2,
+          "impassable": [
+            "wall"
+          ],
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 2,
+            "id": "sword",
+            "max_ammo": 99,
+            "name": "Sword",
+            "range": 1,
+            "recoil": 0.01
+          }
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "n_of_figures": 5,
+          "type": "infantry",
+          "speed": 1,
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 2,
+            "id": "sword",
+            "max_ammo": 99,
+            "name": "Sword",
+            "range": 1,
+            "recoil": 0.01
+          }
+        }
+      ],
+      "blue": [
+        {
+          "x": 5,
+          "y": 0,
+          "type": "heavycavalry",
+          "shield": 2,
+          "speed": 2,
+          "impassable": [
+            "wall"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 3,
+            "id": "halberd",
+            "max_ammo": 99,
+            "name": "Halberd",
+            "range": 1,
+            "recoil": 0.1
+          }
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "type": "infantry",
+          "speed": 1,
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 2,
+            "id": "sword",
+            "max_ammo": 99,
+            "name": "Sword",
+            "range": 1,
+            "recoil": 0.01
+          }
+        },
+        {
+          "x": 8,
+          "y": 1,
+          "type": "crossbowman",
+          "speed": 1,
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 8,
+            "armouredDmg": 0,
+            "damage": 3,
+            "id": "crossbow",
+            "max_ammo": 8,
+            "name": "Crossbow",
+            "range": 3,
+            "recoil": 0.15
+          }
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "type": "cavalry",
+          "speed": 2,
+          "impassable": [
+            "wall"
+          ],
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 2,
+            "id": "sword",
+            "max_ammo": 99,
+            "name": "Sword",
+            "range": 1,
+            "recoil": 0.01
+          }
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "n_of_figures": 4,
+          "type": "infantry",
+          "speed": 1,
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 2,
+            "id": "sword",
+            "max_ammo": 99,
+            "name": "Sword",
+            "range": 1,
+            "recoil": 0.01
+          }
+        },
+        {
+          "x": 7,
+          "y": 3,
+          "type": "crossbowman",
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 8,
+            "armouredDmg": 0,
+            "damage": 3,
+            "id": "crossbow",
+            "max_ammo": 8,
+            "name": "Crossbow",
+            "range": 3,
+            "recoil": 0.15
+          }
+        }
+      ]
+    },
+    "combatOptions": {
+      "traverseFriendlyUnits": true,
+      "chargeTraverseFriendlyUnits": false,
+      "enterEnemyTile": false,
+      "stacking": false,
+      "resolutionMethod": "weapon_stats",
+      "savingThrowsMethod": "no_saving",
+      "friendlyFire": false,
+      "terrainCoverBonus": true,
+      "moraleChecks": false,
+      "pinMoraleChecksAsFUBAR": false,
+      "routThreshold": 25
+    }
+  },
+  "tactical": {
+    "width": 10,
+    "height": 8,
+    "tileMode": "square",
+    "activationMode": "Alternate",
+    "era": "ww2",
+    "terrain": [
+      {
+        "x": 0,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "type": "forest"
+      },
+      {
+        "x": 0,
+        "y": 7,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 7,
+        "type": "forest"
+      },
+      {
+        "x": 2,
+        "y": 7,
+        "type": "forest"
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "type": "highground"
+      },
+      {
+        "x": 0,
+        "y": 5,
+        "type": "highground"
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "type": "highground"
+      },
+      {
+        "x": 0,
+        "y": 3,
+        "type": "highground"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "type": "highground"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "type": "highground"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "type": "highground"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "type": "highground"
+      },
+      {
+        "x": 4,
+        "y": 0,
+        "type": "highground"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "type": "wall"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "type": "wall"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "type": "wall"
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "type": "highground"
+      },
+      {
+        "x": 3,
+        "y": 7,
+        "type": "highground"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "type": "forest"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 2,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "type": "forest"
+      },
+      {
+        "x": 9,
+        "y": 4,
+        "type": "forest"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "type": "qstreet_n_w_s"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "type": "qstreet_s_e"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "type": "qstreet_n_w_s"
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "type": "qstreet_n_w_s"
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 4,
+        "y": 7,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 7,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 6,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "type": "qstreet_n_e_s"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "type": "qstreet_n_e_s"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "type": "wall"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "type": "qstreet_n_w_s"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "type": "qstreet_e_n_w"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "type": "qstreet_e_n_w"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "type": "wall"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "type": "cover"
+      }
+    ],
+    "units": {
+      "red": [
+        {
+          "x": 2,
+          "y": 7,
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 6,
+          "y": 6,
+          "n_of_figures": 1,
+          "type": "mg",
+          "n_of_attacks": 3,
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "hp": 2,
+          "weapon": {
+            "accuracy": 0.65,
+            "ammo": 10,
+            "armouredDmg": 1,
+            "damage": 3,
+            "id": "lmg",
+            "max_ammo": 10,
+            "name": "LMG",
+            "range": 5,
+            "recoil": 0.2
+          }
+        },
+        {
+          "x": 3,
+          "y": 6,
+          "type": "mg",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "hp": 2,
+          "weapon": {
+            "accuracy": 0.65,
+            "ammo": 10,
+            "armouredDmg": 1,
+            "damage": 3,
+            "id": "lmg",
+            "max_ammo": 10,
+            "name": "LMG",
+            "range": 5,
+            "recoil": 0.2
+          }
+        },
+        {
+          "x": 9,
+          "y": 7,
+          "name": "M4 Sherman",
+          "type": "tank",
+          "armor": 3,
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "id": "hcannon",
+            "name": "Heavy Cannon",
+            "damage": 3,
+            "armouredDmg": 6,
+            "range": 8,
+            "accuracy": 0.55,
+            "ammo": 12,
+            "max_ammo": 12,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "name": "Wolverine A",
+          "type": "tank",
+          "armor": 3,
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "id": "lat",
+            "name": "Light AT",
+            "damage": 1,
+            "armouredDmg": 3,
+            "range": 5,
+            "accuracy": 0.6,
+            "ammo": 12,
+            "max_ammo": 12,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 8,
+          "y": 7,
+          "type": "mortar",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 2,
+            "damage": 3,
+            "id": "lmortar",
+            "max_ammo": 12,
+            "name": "Light Mortar",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 5,
+          "y": 7,
+          "name": "Wolverine B",
+          "type": "tank",
+          "armor": 3,
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "id": "lat",
+            "name": "Light AT",
+            "damage": 1,
+            "armouredDmg": 3,
+            "range": 5,
+            "accuracy": 0.6,
+            "ammo": 12,
+            "max_ammo": 12,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 2,
+          "y": 6,
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 6,
+          "y": 7,
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 7,
+          "y": 7,
+          "n_of_figures": 6,
+          "hp": 1
+        }
+      ],
+      "blue": [
+        {
+          "x": 2,
+          "y": 1,
+          "name": "Grenadier Sq 1",
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "name": "Grenadier Sq 2",
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 8,
+          "y": 0,
+          "name": "Grenadier Sq 3",
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "name": "Grenadier Sq 4",
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 9,
+          "y": 1,
+          "name": "Grenadier Sq 8",
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 8,
+          "y": 1,
+          "name": "Grenadier Sq 7",
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "name": "Grenadier Sq 6",
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "name": "Grenadier Sq 5",
+          "n_of_figures": 6,
+          "hp": 1
+        },
+        {
+          "x": 7,
+          "y": 1,
+          "n_of_figures": 1,
+          "type": "mg",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "hp": 2,
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 16,
+            "armouredDmg": 4,
+            "damage": 4,
+            "id": "hmg",
+            "max_ammo": 16,
+            "name": "Heavy MG",
+            "range": 5,
+            "recoil": 0.3
+          }
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "type": "mg",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "hp": 2,
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 16,
+            "armouredDmg": 4,
+            "damage": 4,
+            "id": "hmg",
+            "max_ammo": 16,
+            "name": "Heavy MG",
+            "range": 5,
+            "recoil": 0.3
+          }
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "type": "mortar",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 2,
+            "damage": 3,
+            "id": "lmortar",
+            "max_ammo": 12,
+            "name": "Light Mortar",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "name": "Pzkw 4 A",
+          "type": "tank",
+          "armor": 3,
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "id": "hcannon",
+            "name": "Heavy Cannon",
+            "damage": 3,
+            "armouredDmg": 6,
+            "range": 8,
+            "accuracy": 0.55,
+            "ammo": 12,
+            "max_ammo": 12,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "name": "Pzkw 4 A",
+          "type": "tank",
+          "armor": 3,
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "id": "hcannon",
+            "name": "Heavy Cannon",
+            "damage": 3,
+            "armouredDmg": 6,
+            "range": 8,
+            "accuracy": 0.55,
+            "ammo": 12,
+            "max_ammo": 12,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "name": "Stug III",
+          "type": "tank",
+          "armor": 3,
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "id": "hcannon",
+            "name": "Heavy Cannon",
+            "damage": 3,
+            "armouredDmg": 6,
+            "range": 8,
+            "accuracy": 0.55,
+            "ammo": 12,
+            "max_ammo": 12,
+            "recoil": 0.35
+          }
+        }
+      ]
+    },
+    "combatOptions": {
+      "traverseFriendlyUnits": true,
+      "chargeTraverseFriendlyUnits": false,
+      "enterEnemyTile": false,
+      "stacking": false,
+      "resolutionMethod": "experience_stats",
+      "savingThrowsMethod": "experience_stats",
+      "friendlyFire": false,
+      "terrainCoverBonus": true,
+      "moraleChecks": true,
+      "pinMoraleChecksAsFUBAR": false,
+      "routThreshold": 25
+    }
+  },
+  "formation": {
+    "width": 12,
+    "height": 7,
+    "tileMode": "square",
+    "activationMode": "IGOYGO",
+    "era": "ww2",
+    "terrain": [
+      {
+        "x": 0,
+        "y": 1,
+        "type": "cover"
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "type": "highground"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "type": "highground"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "type": "highground"
+      },
+      {
+        "x": 10,
+        "y": 1,
+        "type": "rocks"
+      },
+      {
+        "x": 9,
+        "y": 1,
+        "type": "rocks"
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 10,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 8,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 8,
+        "y": 1,
+        "type": "highground"
+      },
+      {
+        "x": 10,
+        "y": 4,
+        "type": "forest"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "type": "forest"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "type": "forest"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "type": "qstreet_e_n_w"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "type": "qstreet_n_w_s"
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 0,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "type": "wall"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "type": "wall"
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "type": "cover"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "type": "rough"
+      },
+      {
+        "x": 10,
+        "y": 3,
+        "type": "rough"
+      },
+      {
+        "x": 8,
+        "y": 6,
+        "type": "water"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "type": "qstreet_n_e_s"
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "type": "qstreet_w_s_e"
+      },
+      {
+        "x": 7,
+        "y": 3,
+        "type": "qstreet_s_w"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "type": "qstreet_e_w"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "type": "qstreet_e_w"
+      },
+      {
+        "x": 7,
+        "y": 5,
+        "type": "qstreet_e_w"
+      },
+      {
+        "x": 8,
+        "y": 5,
+        "type": "qstreet_e_w"
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "type": "qstreet_s_e"
+      },
+      {
+        "x": 9,
+        "y": 5,
+        "type": "qstreet_s_w"
+      },
+      {
+        "x": 9,
+        "y": 6,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "type": "qstreet_e_n_w"
+      }
+    ],
+    "units": {
+      "red": [
+        {
+          "x": 5,
+          "y": 6,
+          "type": "at",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 3,
+            "damage": 1,
+            "id": "lat",
+            "max_ammo": 12,
+            "name": "Light AT",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "type": "artillery",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.55,
+            "ammo": 12,
+            "armouredDmg": 6,
+            "damage": 3,
+            "id": "hcannon",
+            "max_ammo": 12,
+            "name": "Heavy Cannon",
+            "range": 8,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 6,
+          "y": 5,
+          "n_of_figures": 2
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "type": "tank",
+          "armor": 2,
+          "speed": 2,
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 4,
+            "damage": 2,
+            "id": "lcannon",
+            "max_ammo": 12,
+            "name": "Light Cannon",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "n_of_figures": 2
+        }
+      ],
+      "blue": [
+        {
+          "x": 11,
+          "y": 3,
+          "n_of_figures": 2
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "type": "tank",
+          "armor": 2,
+          "speed": 2,
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 4,
+            "damage": 2,
+            "id": "lcannon",
+            "max_ammo": 12,
+            "name": "Light Cannon",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 10,
+          "y": 3,
+          "n_of_figures": 2
+        },
+        {
+          "x": 8,
+          "y": 0,
+          "type": "mg",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.65,
+            "ammo": 10,
+            "armouredDmg": 1,
+            "damage": 3,
+            "id": "lmg",
+            "max_ammo": 10,
+            "name": "LMG",
+            "range": 5,
+            "recoil": 0.2
+          }
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "type": "at",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 3,
+            "damage": 1,
+            "id": "lat",
+            "max_ammo": 12,
+            "name": "Light AT",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "tank",
+          "armor": 2,
+          "shield": 1,
+          "hp": 5,
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 4,
+            "damage": 2,
+            "id": "lcannon",
+            "max_ammo": 12,
+            "name": "Light Cannon",
+            "range": 5,
+            "recoil": 0.35
+          }
+        }
+      ]
+    },
+    "combatOptions": {
+      "traverseFriendlyUnits": true,
+      "chargeTraverseFriendlyUnits": false,
+      "enterEnemyTile": false,
+      "stacking": false,
+      "resolutionMethod": "experience_stats",
+      "savingThrowsMethod": "experience_stats",
+      "friendlyFire": false,
+      "terrainCoverBonus": true,
+      "moraleChecks": true,
+      "routThreshold": 25,
+      "pinMoraleChecksAsFUBAR": false
+    }
+  },
+  "strategic": {
+    "width": 16,
+    "height": 6,
+    "tileMode": "hex",
+    "activationMode": "IGOYGO",
+    "era": "modern",
+    "terrain": [
+      {
+        "x": 1,
+        "y": 3,
+        "type": "highground"
+      },
+      {
+        "x": 7,
+        "y": 3,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 3,
+        "type": "hstreet_se_no"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "type": "forest"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "type": "wall"
+      },
+      {
+        "x": 6,
+        "y": 2,
+        "type": "wall"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "type": "wall"
+      },
+      {
+        "x": 6,
+        "y": 5,
+        "type": "wall"
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "type": "wall"
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "type": "hstreet_s_no"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "type": "hstreet_se_no"
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "type": "hstreet_se_no"
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "type": "hstreet_se_n"
+      },
+      {
+        "x": 5,
+        "y": 5,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 2,
+        "y": 0,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 7,
+        "y": 0,
+        "type": "rocks"
+      },
+      {
+        "x": 6,
+        "y": 0,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 7,
+        "y": 1,
+        "type": "hstreet_s_no"
+      },
+      {
+        "x": 7,
+        "y": 2,
+        "type": "hstreet_se_n"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "type": "hstreet_se_no"
+      },
+      {
+        "x": 10,
+        "y": 4,
+        "type": "hstreet_se_no"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "type": "cover"
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "type": "rough"
+      },
+      {
+        "x": 9,
+        "y": 0,
+        "type": "rough"
+      },
+      {
+        "x": 9,
+        "y": 5,
+        "type": "rough"
+      },
+      {
+        "x": 9,
+        "y": 4,
+        "type": "water"
+      },
+      {
+        "x": 10,
+        "y": 0,
+        "type": "highground"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "type": "hstreet_se_n"
+      },
+      {
+        "x": 11,
+        "y": 4,
+        "type": "hstreet_s_no"
+      },
+      {
+        "x": 11,
+        "y": 5,
+        "type": "hstreet_s_n"
+      },
+      {
+        "x": 11,
+        "y": 1,
+        "type": "forest"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "type": "forest"
+      }
+    ],
+    "units": {
+      "red": [
+        {
+          "x": 1,
+          "y": 2,
+          "type": "gunner",
+          "weapon": {
+            "accuracy": 0.5,
+            "ammo": 2,
+            "armouredDmg": 1,
+            "damage": 3,
+            "id": "grenade_launcher",
+            "max_ammo": 2,
+            "name": "Grenade Launcher",
+            "range": 2,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "type": "leader",
+          "experience": "veteran",
+          "weapon": {
+            "accuracy": 0.75,
+            "ammo": 10,
+            "armouredDmg": 0,
+            "damage": 3,
+            "id": "smg",
+            "max_ammo": 10,
+            "name": "SMG",
+            "range": 2,
+            "recoil": 0.12
+          }
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "n_of_figures": 2
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "type": "gunner",
+          "weapon": {
+            "accuracy": 0.5,
+            "ammo": 2,
+            "armouredDmg": 1,
+            "damage": 3,
+            "id": "grenade_launcher",
+            "max_ammo": 2,
+            "name": "Grenade Launcher",
+            "range": 2,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "type": "mobileHMG",
+          "armor": 1,
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 16,
+            "armouredDmg": 4,
+            "damage": 4,
+            "id": "hmg",
+            "max_ammo": 16,
+            "name": "Heavy MG",
+            "range": 5,
+            "recoil": 0.3
+          }
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "type": "lmg",
+          "weapon": {
+            "accuracy": 0.65,
+            "ammo": 10,
+            "armouredDmg": 1,
+            "damage": 3,
+            "id": "lmg",
+            "max_ammo": 10,
+            "name": "LMG",
+            "range": 5,
+            "recoil": 0.2
+          }
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "type": "mortar",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 2,
+            "damage": 3,
+            "id": "lmortar",
+            "max_ammo": 12,
+            "name": "Light Mortar",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "sniper",
+          "weapon": {
+            "accuracy": 0.8,
+            "ammo": 24,
+            "armouredDmg": 0,
+            "damage": 3,
+            "id": "sniper",
+            "max_ammo": 24,
+            "name": "Sniper Rifle",
+            "range": 5,
+            "recoil": 0.3
+          }
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "type": "AT",
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 2,
+            "armouredDmg": 3,
+            "damage": 1,
+            "id": "rpg",
+            "max_ammo": 2,
+            "name": "RPG",
+            "range": 4,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "type": "tank",
+          "armor": 3,
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "accuracy": 0.55,
+            "ammo": 12,
+            "armouredDmg": 6,
+            "damage": 3,
+            "id": "hcannon",
+            "max_ammo": 12,
+            "name": "Heavy Cannon",
+            "range": 8,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "type": "bike",
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "accuracy": 0.75,
+            "ammo": 10,
+            "armouredDmg": 0,
+            "damage": 3,
+            "id": "smg",
+            "max_ammo": 10,
+            "name": "SMG",
+            "range": 2,
+            "recoil": 0.12
+          }
+        }
+      ],
+      "blue": [
+        {
+          "x": 8,
+          "y": 1,
+          "n_of_figures": 2,
+          "type": "soldier",
+          "n_of_attacks": 2
+        },
+        {
+          "x": 9,
+          "y": 1
+        },
+        {
+          "x": 10,
+          "y": 3,
+          "type": "leader",
+          "experience": "veteran",
+          "weapon": {
+            "accuracy": 0.75,
+            "ammo": 10,
+            "armouredDmg": 0,
+            "damage": 3,
+            "id": "smg",
+            "max_ammo": 10,
+            "name": "SMG",
+            "range": 2,
+            "recoil": 0.12
+          }
+        },
+        {
+          "x": 9,
+          "y": 2,
+          "type": "gunner",
+          "weapon": {
+            "accuracy": 0.5,
+            "ammo": 2,
+            "armouredDmg": 1,
+            "damage": 3,
+            "id": "grenade_launcher",
+            "max_ammo": 2,
+            "name": "Grenade Launcher",
+            "range": 2,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 13,
+          "y": 2,
+          "type": "mobileHMG",
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 16,
+            "armouredDmg": 4,
+            "damage": 4,
+            "id": "hmg",
+            "max_ammo": 16,
+            "name": "Heavy MG",
+            "range": 5,
+            "recoil": 0.3
+          }
+        },
+        {
+          "x": 11,
+          "y": 3,
+          "type": "mortar",
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 2,
+            "damage": 3,
+            "id": "lmortar",
+            "max_ammo": 12,
+            "name": "Light Mortar",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 11,
+          "y": 2,
+          "type": "sniper",
+          "weapon": {
+            "accuracy": 0.8,
+            "ammo": 24,
+            "armouredDmg": 0,
+            "damage": 3,
+            "id": "sniper",
+            "max_ammo": 24,
+            "name": "Sniper Rifle",
+            "range": 5,
+            "recoil": 0.3
+          }
+        },
+        {
+          "x": 8,
+          "y": 2,
+          "type": "tank",
+          "armor": 3,
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "accuracy": 0.55,
+            "ammo": 12,
+            "armouredDmg": 6,
+            "damage": 3,
+            "id": "hcannon",
+            "max_ammo": 12,
+            "name": "Heavy Cannon",
+            "range": 8,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 13,
+          "y": 1,
+          "type": "bike",
+          "speed": 2,
+          "impassable": [
+            "wall",
+            "rough",
+            "forest"
+          ],
+          "weapon": {
+            "accuracy": 0.75,
+            "ammo": 10,
+            "armouredDmg": 0,
+            "damage": 3,
+            "id": "smg",
+            "max_ammo": 10,
+            "name": "SMG",
+            "range": 2,
+            "recoil": 0.12
+          }
+        }
+      ]
+    },
+    "combatOptions": {
+      "traverseFriendlyUnits": true,
+      "chargeTraverseFriendlyUnits": false,
+      "enterEnemyTile": false,
+      "stacking": true,
+      "resolutionMethod": "experience_stats",
+      "savingThrowsMethod": "experience_stats",
+      "friendlyFire": false,
+      "terrainCoverBonus": true,
+      "moraleChecks": true,
+      "routThreshold": 25,
+      "pinMoraleChecksAsFUBAR": false
+    }
+  },
+  "custom": {
+    "width": 5,
+    "height": 5,
+    "tileMode": "square",
+    "activationMode": "Alternate-Check",
+    "era": "napoleonic",
+    "terrain": [
+      {
+        "x": 1,
+        "y": 2,
+        "type": "rocks"
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "type": "wall"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "type": "cover"
+      }
+    ],
+    "units": {
+      "red": [
+        {
+          "x": 3,
+          "y": 3,
+          "type": "infantry",
+          "experience": "elite",
+          "hp": 4,
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 4,
+            "damage": 2,
+            "id": "lcannon",
+            "max_ammo": 12,
+            "name": "Light Cannon",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "type": "cavalry",
+          "speed": 2,
+          "impassable": [
+            "wall"
+          ],
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 2,
+            "id": "sword",
+            "max_ammo": 99,
+            "name": "Sword",
+            "range": 1,
+            "recoil": 0.01
+          }
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "type": "artillery",
+          "impassable": [
+            "wall"
+          ],
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 4,
+            "damage": 2,
+            "id": "lcannon",
+            "max_ammo": 12,
+            "name": "Light Cannon",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "type": "skirmisher",
+          "hp": 2,
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 24,
+            "armouredDmg": 0,
+            "damage": 1,
+            "id": "musket",
+            "max_ammo": 24,
+            "name": "Musket",
+            "range": 2,
+            "recoil": 0.1
+          }
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "type": "infantry",
+          "hp": 4,
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 24,
+            "armouredDmg": 0,
+            "damage": 1,
+            "id": "musket",
+            "max_ammo": 24,
+            "name": "Musket",
+            "range": 2,
+            "recoil": 0.1
+          }
+        }
+      ],
+      "blue": [
+        {
+          "x": 1,
+          "y": 0,
+          "type": "infantry",
+          "hp": 4,
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 24,
+            "armouredDmg": 0,
+            "damage": 1,
+            "id": "musket",
+            "max_ammo": 24,
+            "name": "Musket",
+            "range": 2,
+            "recoil": 0.1
+          }
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "type": "infantry",
+          "hp": 4,
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 24,
+            "armouredDmg": 0,
+            "damage": 1,
+            "id": "musket",
+            "max_ammo": 24,
+            "name": "Musket",
+            "range": 2,
+            "recoil": 0.1
+          }
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "type": "dragoons",
+          "experience": "elite",
+          "speed": 2,
+          "impassable": [
+            "wall"
+          ],
+          "hp": 4,
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 99,
+            "armouredDmg": 0,
+            "damage": 2,
+            "id": "sword",
+            "max_ammo": 99,
+            "name": "Sword",
+            "range": 1,
+            "recoil": 0.01
+          }
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "type": "artillery",
+          "impassable": [
+            "wall"
+          ],
+          "invalidActions": [
+            "charge",
+            "advance"
+          ],
+          "weapon": {
+            "accuracy": 0.6,
+            "ammo": 12,
+            "armouredDmg": 4,
+            "damage": 2,
+            "id": "lcannon",
+            "max_ammo": 12,
+            "name": "Light Cannon",
+            "range": 5,
+            "recoil": 0.35
+          }
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "type": "skirmisher",
+          "hp": 2,
+          "weapon": {
+            "accuracy": 0.7,
+            "ammo": 24,
+            "armouredDmg": 0,
+            "damage": 1,
+            "id": "musket",
+            "max_ammo": 24,
+            "name": "Musket",
+            "range": 2,
+            "recoil": 0.1
+          }
+        }
+      ]
+    },
+    "combatOptions": {
+      "traverseFriendlyUnits": true,
+      "chargeTraverseFriendlyUnits": false,
+      "enterEnemyTile": false,
+      "stacking": false,
+      "resolutionMethod": "weapon_stats",
+      "savingThrowsMethod": "no_saving",
+      "friendlyFire": true,
+      "terrainCoverBonus": true,
+      "moraleChecks": true,
+      "pinMoraleChecksAsFUBAR": true,
+      "routThreshold": 25
+    }
+  }
+}

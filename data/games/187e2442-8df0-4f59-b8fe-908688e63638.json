@@ -1,0 +1,529 @@
+{
+  "id": "187e2442-8df0-4f59-b8fe-908688e63638",
+  "name": "ll",
+  "type": "skirmish",
+  "status": "open",
+  "created_at": "2026-07-02T13:27:51.403126Z",
+  "updated_at": "2026-07-02T13:31:00.221897Z",
+  "winner": null,
+  "turn": 2,
+  "current_player": "red",
+  "turn_state": {
+    "card_played": false,
+    "begin_phase_executed": true,
+    "weather": "windy"
+  },
+  "battlefield": {
+    "width": 10,
+    "height": 6,
+    "tileMode": "square",
+    "activationMode": "IGOYGO",
+    "era": "medieval",
+    "terrain": [
+      {
+        "x": 8,
+        "y": 3,
+        "type": "highground"
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "type": "highground"
+      },
+      {
+        "x": 7,
+        "y": 2,
+        "type": "rocks"
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "type": "forest"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "type": "wall"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "type": "wall"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "type": "rough"
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "type": "rough"
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "type": "forest"
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "type": "rocks"
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "type": "wall"
+      }
+    ],
+    "combatOptions": {
+      "traverseFriendlyUnits": true,
+      "chargeTraverseFriendlyUnits": false,
+      "enterEnemyTile": false,
+      "stacking": false,
+      "resolutionMethod": "weapon_stats",
+      "savingThrowsMethod": "no_saving",
+      "friendlyFire": false,
+      "terrainCoverBonus": true,
+      "moraleChecks": false,
+      "pinMoraleChecksAsFUBAR": false,
+      "routThreshold": 25
+    }
+  },
+  "deck": [
+    "medkit",
+    "steady",
+    "harden",
+    "adrenaline",
+    "smoke",
+    "suppress"
+  ],
+  "red": {
+    "units": [
+      {
+        "id": "r-92f80a43",
+        "team": "red",
+        "name": "Red#1",
+        "type": "artillery",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [
+          "wall",
+          "rough"
+        ],
+        "invalidActions": [
+          "charge",
+          "advance"
+        ],
+        "weapon": {
+          "accuracy": 0.3,
+          "ammo": 5,
+          "armouredDmg": 0,
+          "damage": 4,
+          "id": "catapult",
+          "max_ammo": 6,
+          "name": "Catapult",
+          "range": 4,
+          "recoil": 0.2
+        },
+        "position": {
+          "x": 4,
+          "y": 5
+        },
+        "status": "shooted",
+        "recoil_penalty": 0.2,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false,
+        "steady": false
+      },
+      {
+        "id": "r-fc550836",
+        "team": "red",
+        "name": "Red#2",
+        "type": "levies",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 3,
+        "max_figures": 3,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "accuracy": 0.68,
+          "ammo": 99,
+          "armouredDmg": 0,
+          "damage": 2,
+          "id": "spear",
+          "max_ammo": 99,
+          "name": "Spear",
+          "range": 1,
+          "recoil": 0.05
+        },
+        "position": {
+          "x": 5,
+          "y": 4
+        },
+        "status": "fighted",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false,
+        "steady": false
+      },
+      {
+        "id": "r-cb13eefd",
+        "team": "red",
+        "name": "Red#3",
+        "type": "levies",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "accuracy": 0.68,
+          "ammo": 99,
+          "armouredDmg": 0,
+          "damage": 2,
+          "id": "spear",
+          "max_ammo": 99,
+          "name": "Spear",
+          "range": 1,
+          "recoil": 0.05
+        },
+        "position": {
+          "x": 2,
+          "y": 4
+        },
+        "status": "moved",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": false,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "r-577ee5e9",
+        "team": "red",
+        "name": "Red#4",
+        "type": "cavalry",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 2,
+        "speed": 2,
+        "impassable": [
+          "wall"
+        ],
+        "invalidActions": [],
+        "weapon": {
+          "accuracy": 0.7,
+          "ammo": 99,
+          "armouredDmg": 0,
+          "damage": 2,
+          "id": "sword",
+          "max_ammo": 99,
+          "name": "Sword",
+          "range": 1,
+          "recoil": 0.01
+        },
+        "position": {
+          "x": 7,
+          "y": 4
+        },
+        "status": "fighted",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 1,
+        "adrenaline": false,
+        "steady": false
+      },
+      {
+        "id": "r-4225c467",
+        "team": "red",
+        "name": "Red#5",
+        "type": "infantry",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 5,
+        "max_figures": 5,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "accuracy": 0.7,
+          "ammo": 99,
+          "armouredDmg": 0,
+          "damage": 2,
+          "id": "sword",
+          "max_ammo": 99,
+          "name": "Sword",
+          "range": 1,
+          "recoil": 0.01
+        },
+        "position": {
+          "x": 4,
+          "y": 3
+        },
+        "status": "fighted",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false,
+        "steady": false
+      }
+    ],
+    "hand": [
+      "fortify",
+      "grenade"
+    ]
+  },
+  "blue": {
+    "units": [
+      {
+        "id": "b-5ec79030",
+        "team": "blue",
+        "name": "Blue#2",
+        "type": "infantry",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "accuracy": 0.7,
+          "ammo": 99,
+          "armouredDmg": 0,
+          "damage": 2,
+          "id": "sword",
+          "max_ammo": 99,
+          "name": "Sword",
+          "range": 1,
+          "recoil": 0.01
+        },
+        "position": {
+          "x": 7,
+          "y": 1
+        },
+        "status": "moved",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-e55e32a2",
+        "team": "blue",
+        "name": "Blue#3",
+        "type": "crossbowman",
+        "experience": "seasoned",
+        "hp": 3,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "accuracy": 0.6,
+          "ammo": 8,
+          "armouredDmg": 0,
+          "damage": 3,
+          "id": "crossbow",
+          "max_ammo": 8,
+          "name": "Crossbow",
+          "range": 3,
+          "recoil": 0.15
+        },
+        "position": {
+          "x": 8,
+          "y": 2
+        },
+        "status": "moved",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-5b0d123d",
+        "team": "blue",
+        "name": "Blue#5",
+        "type": "infantry",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 4,
+        "max_figures": 4,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "accuracy": 0.7,
+          "ammo": 99,
+          "armouredDmg": 0,
+          "damage": 2,
+          "id": "sword",
+          "max_ammo": 99,
+          "name": "Sword",
+          "range": 1,
+          "recoil": 0.01
+        },
+        "position": {
+          "x": 5,
+          "y": 3
+        },
+        "status": "moved",
+        "recoil_penalty": 0.0,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "adrenaline": false
+      },
+      {
+        "id": "b-3199a4f6",
+        "team": "blue",
+        "name": "Blue#6",
+        "type": "crossbowman",
+        "experience": "seasoned",
+        "hp": 1,
+        "max_hp": 3,
+        "armor": 0,
+        "shields": 0,
+        "n_of_attacks": 1,
+        "n_of_figures": 1,
+        "max_figures": 1,
+        "speed": 1,
+        "impassable": [],
+        "invalidActions": [],
+        "weapon": {
+          "accuracy": 0.6,
+          "ammo": 7,
+          "armouredDmg": 0,
+          "damage": 3,
+          "id": "crossbow",
+          "max_ammo": 8,
+          "name": "Crossbow",
+          "range": 3,
+          "recoil": 0.15
+        },
+        "position": {
+          "x": 7,
+          "y": 3
+        },
+        "status": "shooted",
+        "recoil_penalty": 0.15,
+        "overwatch_ready": false,
+        "acted": true,
+        "stress": 0,
+        "steady": false
+      }
+    ],
+    "hand": [
+      "scout",
+      "charge"
+    ]
+  },
+  "selected_unit_id": "r-577ee5e9",
+  "log": [
+    "Game ll created (type=skirmish, 10x6).",
+    "Begin Phase started (weather: raining)",
+    "Begin Phase completed",
+    "Action requested: run with dices None",
+    "Red Red#4 run to open (7,5) [cost 4/4]",
+    "Action requested: run with dices None",
+    "Red Red#2 run to open (5,4) [cost 2/2]",
+    "Action requested: run with dices None",
+    "Red Red#1 run to open (4,5) [cost 2/2]",
+    "Action requested: run with dices None",
+    "Red Red#5 run to open (3,5) [cost 2/2]",
+    "Action requested: move with dices None",
+    "Red Red#3 move to wall (2,4) [cost 1/1]",
+    "Red ends turn 1",
+    "Action requested: shoot with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 1}, {'tag': 'Att', 'sides': 6, 'value': 1}, {'tag': 'Bonus', 'sides': 4, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 3}, {'tag': 'Def', 'sides': 6, 'value': 1}], 'byTag': {'Att': 1, 'Bonus': 4, 'Def': 1}, 'total': 10}",
+    " Combat mode weapon_stats Saving throws mode: no_saving ",
+    "Blue#6 Figure 1 Attack 1:  hits Red#4 for 3 damage . Notes: base is 0.6   ",
+    "Red#4 loses a figure but is still standing with 1 figures left!",
+    "Shooting -> hit",
+    "Action requested: charge with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 3}, {'tag': 'Att', 'sides': 6, 'value': 1}, {'tag': 'Bonus', 'sides': 4, 'value': 3}, {'tag': 'Def', 'sides': 6, 'value': 6}, {'tag': 'Def', 'sides': 6, 'value': 3}], 'byTag': {'Att': 1, 'Bonus': 3, 'Def': 3}, 'total': 16}",
+    "Blue Blue#4 charges towards (4,5), stops at (4,4)",
+    "Blue#4 Figure 1 Attack 1:  hits Red#1 for 2 damage!",
+    "Blue#4 remains at (4,4)",
+    "Action requested: run with dices None",
+    "Blue Blue#1 run to open (4,3) [cost 4/4]",
+    "Action requested: move with dices None",
+    "Blue Blue#5 move to wall (5,3) [cost 1/1]",
+    "Action requested: run with dices None",
+    "Blue Blue#3 run to open (8,2) [cost 1/2]",
+    "Action requested: run with dices None",
+    "Blue Blue#2 run to open (7,1) [cost 1/2]",
+    "Blue ends turn 1",
+    "Begin Phase started (weather: windy)",
+    "Begin Phase completed",
+    "Action requested: shoot with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 5}, {'tag': 'Att', 'sides': 6, 'value': 4}, {'tag': 'Bonus', 'sides': 4, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 2}, {'tag': 'Def', 'sides': 6, 'value': 3}], 'byTag': {'Att': 4, 'Bonus': 4, 'Def': 3}, 'total': 18}",
+    " Combat mode weapon_stats Saving throws mode: no_saving ",
+    "Red#1 Figure 1 Attack 1:  hits Blue#4 for 4 damage . Notes: base is 0.3   ",
+    "Blue#4 cavalry is eliminated",
+    "Shooting -> killed",
+    "Action requested: charge with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 6}, {'tag': 'Att', 'sides': 6, 'value': 2}, {'tag': 'Bonus', 'sides': 4, 'value': 1}, {'tag': 'Def', 'sides': 6, 'value': 3}, {'tag': 'Def', 'sides': 6, 'value': 3}], 'byTag': {'Att': 2, 'Bonus': 1, 'Def': 3}, 'total': 15}",
+    "Red Red#5 charges towards (4,3), stops at (4,4)",
+    "Red#5 Figure 1 Attack 1:  misses Blue#1",
+    "Red#5 Figure 3 Attack 1:  hits Blue#1 for 2 damage!",
+    "Red#5 Figure 4 Attack 1:  hits Blue#1 for 2 damage!",
+    "Blue#1 is eliminated",
+    "Red#5 advances into (4,3)",
+    "Action requested: attack with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 1}, {'tag': 'Att', 'sides': 6, 'value': 4}, {'tag': 'Bonus', 'sides': 4, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 5}], 'byTag': {'Att': 4, 'Bonus': 4, 'Def': 5}, 'total': 18}",
+    "Red#2 Figure 1 Attack 1:  misses Blue#5",
+    "Red#2 Figure 2 Attack 1:  hits Blue#5 for 2 damage!",
+    "Red#2 Figure 3 Attack 1:  misses Blue#5",
+    "Action requested: charge with dices {'rolls': [{'tag': 'Att', 'sides': 6, 'value': 4}, {'tag': 'Att', 'sides': 6, 'value': 3}, {'tag': 'Bonus', 'sides': 4, 'value': 4}, {'tag': 'Def', 'sides': 6, 'value': 2}, {'tag': 'Def', 'sides': 6, 'value': 6}], 'byTag': {'Att': 3, 'Bonus': 4, 'Def': 6}, 'total': 19}",
+    "Red Red#4 charges towards (7,3), stops at (7,4)",
+    "Red#4 Figure 1 Attack 1:  hits Blue#6 for 2 damage!",
+    "Red#4 remains at (7,4)"
+  ],
+  "actedUnits": []
+}

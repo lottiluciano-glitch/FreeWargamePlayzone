@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Battle — {{ game_id[:8] }}{% endblock %}
+{% block content %}
+  <section id="battle-root" data-game-id="{{ game_id }}">
+    <div class="top-actions">
+      <div id="turn-info">Loading…</div>
+      <div class="actions-group">
+        <div id="action-buttons" class="actions"></div>
+      </div>
+    </div>
+    <div id="error-message" class="error-message">Area messaggi</div>
+    <div class="battle-layout">
+      <aside class="side-panel red">
+        <h3>🔴 Red Team</h3>
+        <div id="red-units" class="units"></div>
+        <h4>Cards</h4>
+        <div id="red-cards" class="cards"></div>
+      </aside>
+
+      <section class="battlefield-wrapper">
+        <div class="legend">
+          <span class="legend-item">Weather: <strong id="weather-status">Unknown</strong></span>
+          <span class="legend-item">Stacking: <strong id="unit-stacking-status">Unknown</strong></span>
+          <span class="legend-item">Traverse Friends:<strong id="traverse-friendly-units-status">Unknown</strong></span>
+          <span class="legend-item">Combat:<strong id="combat-resolution-status">Unknown</strong></span>
+          <span class="legend-item">Saving Throws:<strong id="saving-throws-status">Unknown</strong></span>
+
+          <span class="legend-item"><span class="swatch t-open"></span> Open</span>
+          <span class="legend-item"><span class="swatch t-cover"></span> Cover (+1 shield when defending)</span>
+          <span class="legend-item"><span class="swatch t-rough"></span> Rough (cost 2)</span>
+          <span class="legend-item"><span class="swatch t-wall"></span> Wall (impassable, blocks LOS)</span>
+        </div>
+        <div id="battlefield-viewport" class="battlefield-viewport" aria-label="Scrollable battlefield viewport">
+          <div id="battlefield" class="battlefield" tabindex="0" aria-label="Battlefield grid"></div>
+        </div>
+        <div class="battle-minimap-panel" aria-label="Mini map panel">
+          <div class="battle-minimap-header">
+            <strong>Mini Map</strong>
+            <span id="minimap-coords">(0,0)</span>
+          </div>
+          <div id="battle-minimap-wrap" class="battle-minimap-wrap" aria-label="Mini map (click to move viewport)">
+            <canvas id="battle-minimap" width="220" height="220"></canvas>
+            <div id="battle-minimap-viewport" class="battle-minimap-viewport" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div id="log" class="log"></div>
+      </section>
+
+
+
+
+      <aside class="side-panel blue">
+        <h3>🔵 Blue Team</h3>
+        <div id="blue-units" class="units"></div>
+        <h4>Cards</h4>
+        <div id="blue-cards" class="cards"></div>
+      </aside>
+    </div>
+  </section>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dice-roller.css') }}">
+  <script src="{{ url_for('static', filename='js/dice-roller.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/battle.js') }}"></script>
+{% endblock %}

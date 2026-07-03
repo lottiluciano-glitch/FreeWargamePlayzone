@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% block title %}Type Editor — {{ type_id }}{% endblock %}
+{% block content %}
+<section id="editor-root" data-type-id="{{ type_id }}">
+  <div class="editor-header">
+    <h2>Type Editor — {{ type_id }}</h2>
+    <a class="btn" href="/games?type={{ type_id }}">⬅ Back to Games</a>
+  </div>
+
+  <div class="editor-toolbar panel">
+    <label>Size:</label>
+    <input id="w" type="number" min="5" max="30" step="1" value="10"> ×
+    <input id="h" type="number" min="5" max="30" step="1" value="10">
+    <input type="checkbox" id="useHex" name="useHex" unchecked />    <label for="useHex">Hex Map</label>
+    <input type="checkbox" id="useAltActivation" name="useAltActivation" unchecked />    <label for="useAltActivation">Alternate Activation</label>
+    <input type="checkbox" id="useActivationCheck" name="useActivationCheck" unchecked />    <label for="useActivationCheck">Activation Check</label>
+    <span class="gap"></span>
+    <label for="era-select">⚔️ Era:</label>
+    <select id="era-select" title="Sets the weapon palette, unit icons and era-specific parameters for all games of this type">
+      <!-- Options are populated dynamically by editor.js from ERAS -->
+    </select>
+
+    <span class="gap"></span>
+    <label>Mode:</label>
+    <button id="mode-terrain" class="tab active">Terrain</button>
+    <button id="mode-units" class="tab">Units</button>
+    <span class="gap"></span>
+
+    <!-- Unit tools (terrain tools moved to right panel) -->
+    <span id="unit-tools" style="display:none;align-items:center;gap:8px">
+      <label>Team:</label>
+      <button class="team" data-team="red">🔴 Red</button>
+      <button class="team" data-team="blue">🔵 Blue</button>
+      <button id="clear-units" class="secondary">Clear Units</button>
+    </span>
+
+    <span style="flex:1"></span>
+    <button id="save">💾 Save</button>
+
+    <span style="flex:1"></span>
+    <button class="btn secondary" onclick="saveScenario()">💾 Save as Scenario</button>
+  </div>
+
+  <div class="editor-body">
+    <!-- Left col: terrain brush panel -->
+    <aside id="terrain-tools" class="panel terrain-side-panel" aria-label="Terrain brushes">
+      <h3 class="terrain-panel-title">🗺 Terrain</h3>
+      <div class="terrain-brush-list" id="terrain-brush-list"></div>
+      <hr class="terrain-divider">
+      <button id="erase" class="eraser-btn secondary">🧹 Eraser</button>
+    </aside>
+
+    <!-- Centre col: legend + scrollable map -->
+    <div class="editor-map-area">
+      <div class="legend">
+        <span class="legend-item"><span class="swatch t-open"></span> Open</span>
+        <span class="legend-item"><span class="swatch t-cover"></span> Cover</span>
+        <span class="legend-item"><span class="swatch t-rough"></span> Rough</span>
+        <span class="legend-item"><span class="swatch t-wall"></span> Wall</span>
+        <span class="legend-item"><span class="marker red"></span> Red Unit</span>
+        <span class="legend-item"><span class="marker blue"></span> Blue Unit</span>
+      </div>
+      <div class="map-scroll-wrap">
+        <div id="map" class="battlefield"></div>
+      </div>
+    </div>
+
+    <!-- Combat Rules panel -->
+    <aside id="combat-rules-panel" class="panel combat-rules-panel" aria-label="Combat rules">
+      <h3 class="combat-panel-title">⚔️ Combat Rules</h3>
+
+      <!-- ── Movement ─────────────────────────────────────────────── -->
+      <div class="combat-section">
+        <div class="combat-section-header">🚶 Movement</div>
+
+        <div class="combat-field">
+          <label class="combat-label" for="cr-traverse-friendly"
+                 title="Units can move through tiles occupied by friendly units">
+            Pass through friendlies
+          </label>
+          <input type="checkbox" id="cr-traverse-friendly" class="combat-check" checked />
+        </div>
+
+        <div class="combat-field">
+          <label class="combat-label" for="cr-charge-traverse-friendly"
+                 title="Units can move through tiles occupied by friendly units during a charge">
+            Pass through friendlies (Charge)
+          </label>
+          <input type="checkbox" id="cr-charge-traverse-friendly" class="combat-check" checked />
+        </div>
+
+        <div class="combat-field">
+          <label class="combat-label" for="cr-enter-enemy-tile"
+                 title="Units can enter tiles occupied by enemy units">
+            Enter enemy tile (Attack/Charge)
+          </label>
+          <input type="checkbox" id="cr-enter-enemy-tile" class="combat-check" checked />
+        </div>
+
+        <div class="combat-field">
+          <label class="combat-label" for="cr-stacking"
+                 title="Multiple units may occupy the same tile. Requires pass through friends.">
+            Unit stacking
+          </label>
+          <input type="checkbox" id="cr-stacking" class="combat-check" checked />
+        </div>
+      </div>
+
+      <!-- ── Combat Resolution ─────────────────────────────────────── -->
+      <div class="combat-section">
+        <div class="combat-section-header">🎲 Combat Resolution</div>
+
+        <div class="combat-field">
+          <label class="combat-label" for="cr-resolution-method"
+                 title="Algorithm used to resolve combat hits">
+            Resolution method
+          </label>
+          <select id="cr-resolution-method" class="combat-select">
+            <option value="weapon_stats">Weapon stats</option>
+            <option value="experience_stats">Experience stats</option>
+            <option value="dice_pool">Dice pool</option>
+            <option value="single_roll">Single roll</option>
+            <option value="opposed_roll">Opposed roll</option>
+          </select>
+        </div>
+        <div class="combat-field">
+          <label class="combat-label" for="cr-saving-throws-method"
+                 title="Algorithm used to resolve saving throws">
+            Saving throws method
+          </label>
+          <select id="cr-saving-throws-method" class="combat-select">
+            <option value="no_saving">No saving</option>
+            <option value="experience_stats">Experience stats</option>
+
+          </select>
+        </div>
+        <div class="combat-field">
+          <label class="combat-label" for="cr-friendly-fire"
+                 title="Missed shots may hit friendly units in the same tile">
+            Friendly fire
+          </label>
+          <input type="checkbox" id="cr-friendly-fire" class="combat-check" />
+        </div>
+
+        <div class="combat-field">
+          <label class="combat-label" for="cr-terrain-cover-bonus"
+                 title="Cover terrain reduces incoming hits">
+            Terrain cover bonus
+          </label>
+          <input type="checkbox" id="cr-terrain-cover-bonus" class="combat-check" checked />
+        </div>
+      </div>
+
+      <!-- ── Morale ────────────────────────────────────────────────── -->
+      <div class="combat-section">
+        <div class="combat-section-header">🧠 Morale</div>
+
+        <div class="combat-field">
+          <label class="combat-label" for="cr-morale-checks"
+                 title="Units must pass a morale check after taking casualties">
+            Morale checks
+          </label>
+          <input type="checkbox" id="cr-morale-checks" class="combat-check" />
+        </div>
+
+        <div class="combat-field">
+          <label class="combat-label" for="cr-pin-morale-checks-as-FUBAR"
+                 title="Units must pass a morale check if pinned or suppressed">
+            Pin and Morale FUBAR mode
+          </label>
+          <input type="checkbox" id="cr-pin-morale-checks-as-FUBAR" class="combat-check" />
+        </div>
+
+
+
+        <div class="combat-field">
+          <label class="combat-label" for="cr-rout-threshold"
+                 title="HP percentage at which a unit routes automatically">
+            Rout threshold (%)
+          </label>
+          <input type="number" id="cr-rout-threshold" class="combat-number"
+                 min="0" max="100" step="5" value="25" />
+        </div>
+      </div>
+
+
+      
+
+      <!-- Future sections can be appended here -->
+    </aside>
+
+    <!-- Right col: selected unit editor + full unit list -->
+    <aside id="unit-panel" class="panel unit-panel" aria-live="polite">
+      <div id="selected-unit-detail" class="selected-unit-detail">
+        <div class="unit-detail-placeholder">Click a unit on the map or in the list below to edit it.</div>
+      </div>
+      <div class="unit-list-section-header">All Units</div>
+      <div class="unit-list" id="unit-list"></div>
+      <div class="unit-hint">Tip: drag units on the map to reposition them.</div>
+    </aside>
+  </div>
+</section>
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+<script>
+function saveScenario() {
+  // editingScenarioId is set by editor.js when the editor was opened with ?scenario=
+  const existingId = window.editingScenarioId || null;
+  const defaultName = window.editingScenarioName || "";
+  const name = prompt("Scenario name?", defaultName);
+  if (!name) return;
+
+  const getState = window.getCurrentEditorState;
+  if (typeof getState !== 'function') {
+    alert('Editor state is not ready yet.');
+    return;
+  }
+
+  const payload = { name, template: getState() };
+  if (existingId) payload.id = existingId;
+
+  fetch(`/api/type/{{ type_id }}/scenario/save`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(async r => {
+    const d = await r.json();
+    if (!r.ok || !d.ok) {
+      throw new Error(d.error || d.message || 'Failed to save scenario');
+    }
+    return d;
+  })
+  .then(d => {
+    window.editingScenarioId = d.scenario_id;
+    window.editingScenarioName = name;
+    alert(existingId ? "Scenario updated!" : "Scenario saved!");
+  })
+  .catch(err => {
+    alert(err.message || 'Failed to save scenario');
+  });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Games - {{ game_type_name }}{% endblock %}
+{% block content %}
+  <section>
+    <h2>{{ game_type_name }} — Games</h2>
+    <div class="row">
+      <div class="col">
+        <h3>Open games</h3>
+        {% if open_games %}
+          <ul class="list">
+            {% for g in open_games %}
+              <li>
+                <span>#{{ g.id[:8] }} - </span><span style="width: 200px; display: inline-block;">  [Era: {{ g.era }}]</span> — {{ g.name }} (Turn {{ g.turn }}, {{ g.current_player|capitalize }} to act)</span>
+                <span class="li-actions">
+                  <a class="btn" href="/battle/{{ g.id }}">Resume</a>
+                  <button class="btn danger" onclick="deleteGame('{{ g.id }}', '{{ g.name }}')">Delete</button>
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>None yet.</p>
+        {% endif %}
+      </div>
+      <div class="col">
+        <h3>Finished games</h3>
+        {% if finished_games %}
+          <ul class="list">
+            {% for g in finished_games %}
+              <li>
+                <span>#{{ g.id[:8] }} — {{ g.name }} (Winner: {{ g.winner|default('N/A') }})</span>
+                <span class="li-actions">
+                  <a class="btn" href="/battle/{{ g.id }}">View</a>
+                  <button class="btn danger" onclick="deleteGame('{{ g.id }}', '{{ g.name }}')">Delete</button>
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>None yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <hr>
+<h3>Scenarios</h3>
+<ul id="scenarios"></ul>
+
+<script>
+fetch(`/api/type/{{ game_type_id }}/scenarios`)
+ .then(r => r.json())
+ .then(data => {
+   const ul = document.getElementById('scenarios');
+   Object.entries(data).forEach(([id, s]) => {
+     const li = document.createElement('li');
+      li.innerHTML = `
+        <button onclick="startScenario('${id}', '${s.name}')">▶ Start Battle</button>
+        <a class="btn secondary" href="/editor/type/{{ game_type_id }}?scenario=${id}">✏️ Edit</a>
+        <button class="btn danger" onclick="deleteScenario('${id}', '${s.name}')">Delete</button>
+        <span style="width: 100px; display: inline-block;"> [${s.template.era}] </span>
+        <span>${s.name}</span>
+      `;
+
+     ul.appendChild(li);
+   });
+ });
+
+function startScenario(id, sname) {
+  const name = prompt("Game name?", sname);
+  fetch(`/api/type/{{ game_type_id }}/scenario/${id}/start`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ name })
+  })
+  .then(r => r.json())
+  .then(d => location.href = `/battle/${d.game_id}`);
+}
+</script>
+    <h3>Start a new game</h3>
+    <form action="/games" method="post" class="panel">
+      <input type="hidden" name="type" value="{{ game_type_id }}">
+      <label for="name">Name</label>
+      <input id="name" name="name" placeholder="e.g., Luciano vs Peter (Demo)" required>
+      <button type="submit">Create Game</button>
+      <a class="btn secondary" href="/editor/type/{{ game_type_id }}">🗺️ Edit Type Template</a>
+    </form>
+  </section>
+  <script>
+    function deleteGame(id, name) {
+      if (!confirm(`Delete game "${name}"? This cannot be undone.`)) return;
+      fetch(`/api/game/${id}/delete`, { method: 'POST' })
+        .then(r => r.json())
+        .then(d => { if (d.ok) location.reload(); })
+        .catch(() => alert('Delete failed.'));
+    }
+  </script>
+  <style>
+    .btn.danger { background: #c0392b; color: #fff; margin-left: .25rem; }
+    .btn.danger:hover { background: #a93226; }
+    .list li { display: flex; align-items: center; justify-content: space-between; }
+    .li-actions { display: flex; gap: .25rem; margin-left: auto; }
+  </style>
+
+  <script>
+  function deleteScenario(id, name) {
+    if (!confirm(`Delete scenario "${name}"? This cannot be undone.`)) return;
+
+    fetch(`/api/type/{{ game_type_id }}/scenario/${id}/delete`, {
+      method: 'POST'
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.ok) location.reload();
+        else alert('Delete failed.');
+      })
+      .catch(() => alert('Delete failed.'));
+  }
+  </script>
+
+{% endblock %}

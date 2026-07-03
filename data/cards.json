@@ -1,0 +1,64 @@
+{
+  "cards": [
+    {
+      "id": "adrenaline",
+      "name": "Adrenaline Boost",
+      "description": "+1 move range this turn (move/run)",
+      "target": "unit"
+    },
+    {
+      "id": "medkit",
+      "name": "Medkit",
+      "description": "Heal 1 HP on selected unit",
+      "target": "unit"
+    },
+    {
+      "id": "grenade",
+      "name": "Frag Grenade",
+      "description": "Deal 1 damage to enemy in adjacent tile",
+      "target": "enemy_adjacent"
+    },
+    {
+      "id": "smoke",
+      "name": "Smoke",
+      "description": "Selected unit cannot be attacked until next turn",
+      "target": "unit"
+    },
+    {
+      "id": "suppress",
+      "name": "Suppressing Fire",
+      "description": "Target enemy goes DOWN",
+      "target": "enemy_visible"
+    },
+    {
+      "id": "harden",
+      "name": "Harden",
+      "description": "+1 max HP for selected unit (once)",
+      "target": "unit"
+    },
+    {
+      "id": "scout",
+      "name": "Scout",
+      "description": "Reveal positions: no effect in demo except log",
+      "target": "none"
+    },
+    {
+      "id": "charge",
+      "name": "Charge",
+      "description": "Attack can also move into target tile if defeated",
+      "target": "unit"
+    },
+    {
+      "id": "steady",
+      "name": "Steady Aim",
+      "description": "Attack deals +1 damage (demo caps at 2)",
+      "target": "unit"
+    },
+    {
+      "id": "fortify",
+      "name": "Fortify",
+      "description": "Selected unit enters OVERWATCH and gains +1 HP shield this turn",
+      "target": "unit"
+    }
+  ]
+}

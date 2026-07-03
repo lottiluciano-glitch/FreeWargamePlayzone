@@ -1,0 +1,24 @@
+{
+  "game_types": [
+    {
+      "id": "skirmish",
+      "name": "Skirmish"
+    },
+    {
+      "id": "tactical",
+      "name": "Tactical"
+    },
+    {
+      "id": "strategic",
+      "name": "Strategic"
+    },
+    {
+      "id": "formation",
+      "name": "Formation"
+    },
+    {
+      "id": "custom",
+      "name": "Custom"
+    }
+  ]
+}

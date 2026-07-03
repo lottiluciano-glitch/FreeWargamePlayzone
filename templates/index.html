@@ -1,0 +1,26 @@
+
+{% extends 'base.html' %}
+{% block title %}Select Game Type{% endblock %}
+{% block content %}
+  <section>
+    <h2>Select a Game Type</h2>
+    <div class="game-types-grid">
+      {% for t in game_types %}
+        <a href="/games?type={{ t.id }}" class="game-type-card">
+          <div class="game-type-icon">
+            {% if t.id == 'skirmish' %}
+              <img src="/static/img/type-skirmish.png" alt="Skirmish">
+            {% elif t.id == 'tactical' %}
+              <img src="/static/img/type-siege.png" alt="Siege">
+            {% elif t.id == 'formation' %}
+              <img src="/static/img/type-space.png" alt="Space">
+            {% else %}
+              <img src="/static/img/type-generic.png" alt="Battle">
+            {% endif %}
+          </div>
+          <h3>{{ t.name }}</h3>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}
