@@ -7,3 +7,28 @@ Alter the Json to create new unit types and change the images to fully customize
 
 <img width="1886" height="884" alt="image" src="https://github.com/user-attachments/assets/a582345b-f18e-490b-954d-c4d7511c998a" />
 
+How to run the wargame engine
+
+INTRO
+This is a Python Flask application
+To run it you need to:
+ install Python
+ open a CMD window   
+ add the Flask module 
+    -> pip install Flask 
+
+Once python and flask are installed:
+    Unzip the file in a folder of choice
+    open a CMD window
+    CD to the folder (the right folder contains the app.py file)
+    type the following:
+        python app.py
+
+This actvate the server.
+Some messages will appear on the window.
+To stop the server just press CTRL-C or close the CMD window
+NOTE: if the server is not running the web application will not work
+
+
+Now open a browser (e.g. Chrome) and type
+    localhost:5000
