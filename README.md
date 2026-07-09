@@ -9,7 +9,7 @@ Alter the Json to create new unit types and change the images to fully customize
 
 How to run the wargame engine
 
-INTRO
+
 This is a Python Flask application
 To run it you need to:
  install Python
