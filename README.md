@@ -7,7 +7,7 @@ Alter the Json to create new unit types and change the images to fully customize
 
 <img width="1886" height="884" alt="image" src="https://github.com/user-attachments/assets/a582345b-f18e-490b-954d-c4d7511c998a" />
 
-How to run the wargame engine
+<H1>How to run the wargame engine</H1>
 
 
 This is a Python Flask application
