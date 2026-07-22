@@ -70,6 +70,10 @@ button.team.active{background:#22c55e;color:#052e16}
   width:max-content;
   min-width:100%;
 }
+
+
+
+
 .battle-minimap-panel{
   position:absolute;
   top:12px;
@@ -946,3 +950,4 @@ background-color: transparent;
   z-index: 5;
   white-space: nowrap;
 }
+

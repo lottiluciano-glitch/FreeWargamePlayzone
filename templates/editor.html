@@ -208,6 +208,36 @@
     </aside>
   </div>
 </section>
+<style>
+  /* True flat-top hex tile rendering. Square mode is untouched (still CSS Grid). */
+  #map.hex-mode {
+    position: relative;
+  }
+  #map.hex-mode .tile {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  }
+
+  /* Hex borders + selection/drag-over highlighting, masked to follow the hex
+     silhouette instead of a rectangular border/outline sliced by clip-path. */
+  #map.hex-mode .tile {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  #map.hex-mode .tile::after {
+      margin-left: -10%;
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-color: rgba(255, 255, 255, 0.22);
+      mask-image: url("{{ url_for('static', filename='img/hex-outline-mask.svg') }}");
+      mask-size: 110% 110%;
+      mask-repeat: no-repeat;
+  }
+  #map.hex-mode .tile.selected::after  { background-color: #22c55e; }
+  #map.hex-mode .tile.drag-over::after { background-color: #38bdf8; }
+</style>
 <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
 <script>
 function saveScenario() {

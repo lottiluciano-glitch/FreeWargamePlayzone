@@ -58,6 +58,41 @@
     </div>
   </section>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dice-roller.css') }}">
+  <style>
+    /* True flat-top hex tile rendering. Square mode is untouched (still CSS Grid). */
+    #battlefield.hex-mode {
+      position: relative;
+    }
+    #battlefield.hex-mode .tile {
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    }
+
+    /* Hex borders + state highlighting (sel / reachable / path / targetable).
+       A rectangular border/outline/box-shadow gets sliced oddly at the hex
+       corners once clip-path is applied, so every ring below is a masked
+       shape that follows the hex silhouette instead — a single ring mask,
+       recolored per state via background-color. */
+    #battlefield.hex-mode .tile {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    #battlefield.hex-mode .tile::after {
+      margin-left: -10%;
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-color: rgba(255, 255, 255, 0.22);
+      mask-image: url("{{ url_for('static', filename='img/hex-outline-mask.svg') }}");
+      mask-size: 110% 110%;
+      mask-repeat: no-repeat;
+    }
+    #battlefield.hex-mode .tile.sel::after        { background-color: #22c55e; }
+    #battlefield.hex-mode .tile.reachable::after  { background-color: #38bdf8; }
+    #battlefield.hex-mode .tile.path::after       { background-color: #eab308; }
+    #battlefield.hex-mode .tile.targetable::after { background-color: #ef4444; }
+  </style>
   <script src="{{ url_for('static', filename='js/dice-roller.js') }}"></script>
   <script src="{{ url_for('static', filename='js/battle.js') }}"></script>
 {% endblock %}

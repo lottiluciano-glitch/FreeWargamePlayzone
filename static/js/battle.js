@@ -8,6 +8,15 @@
   const TILE_SIZE_MAX = 224;
   const TILE_SIZE_STEP = 16;
 
+  // True flat-top hex geometry derived from TILE_SIZE (the hex's point-to-point width).
+  // height = sqrt(3)/2 * width; columns are packed 0.75*width apart so they interlock;
+  // odd columns drop by half a hex height (matches the existing x%2 offset scheme).
+  function hexGeometry(tileSize) {
+    const w = tileSize;
+    const h = tileSize * Math.sqrt(3) / 2;
+    return { w, h, colStep: w * 0.75, rowStep: h, rowOffset: h / 2 };
+  }
+
   const root = document.getElementById('battle-root');
   if(!root) return;
   const gameId = root.dataset.gameId;
@@ -343,8 +352,15 @@
 
     if (localX < 0 || localY < 0 || localX > minimapMeta.mapW || localY > minimapMeta.mapH) return;
 
-    const tileX = Math.max(0, Math.min(minimapMeta.cols - 1, Math.floor(localX / minimapMeta.scale)));
-    const tileY = Math.max(0, Math.min(minimapMeta.rows - 1, Math.floor(localY / minimapMeta.scale)));
+    let tileX, tileY;
+    if (minimapMeta.isHex) {
+      tileX = Math.max(0, Math.min(minimapMeta.cols - 1, Math.round(localX / minimapMeta.colStep)));
+      const rowOff = tileX % 2 === 1 ? minimapMeta.rowOffset : 0;
+      tileY = Math.max(0, Math.min(minimapMeta.rows - 1, Math.round((localY - rowOff) / minimapMeta.rowStep)));
+    } else {
+      tileX = Math.max(0, Math.min(minimapMeta.cols - 1, Math.floor(localX / minimapMeta.scale)));
+      tileY = Math.max(0, Math.min(minimapMeta.rows - 1, Math.floor(localY / minimapMeta.scale)));
+    }
     centerViewportOnTile(tileX, tileY);
   }
 
@@ -376,19 +392,31 @@
     const w = el.minimap.width;
     const h = el.minimap.height;
 
-    const logicalRows = isHex ? rows + 0.5 : rows;
-    const scale = Math.max(1, Math.min((w - 8) / cols, (h - 8) / logicalRows));
+    // Minimap "scale" below is the hex's own point-to-point width in minimap pixels;
+    // colStep/rowStep/rowOffset mirror hexGeometry() but in minimap-scale units.
+    const logicalCols = isHex ? (cols - 1) * 0.75 + 1 : cols;
+    const logicalRows = isHex ? rows * (Math.sqrt(3) / 2) + 0.5 * (Math.sqrt(3) / 2) : rows;
+    const scale = Math.max(1, Math.min((w - 8) / logicalCols, (h - 8) / logicalRows));
+    const colStep = isHex ? scale * 0.75 : scale;
+    const rowStep = isHex ? scale * Math.sqrt(3) / 2 : scale;
+    const rowOffset = isHex ? rowStep / 2 : 0;
 
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = '#3f172a07';
     ctx.fillRect(0, 0, w, h);
 
-    const mapW = cols * scale;
-    const mapH = logicalRows * scale;
+    const mapW = (cols - 1) * colStep + scale;
+    const mapH = (rows - 1) * rowStep + rowStep + rowOffset;
     const offsetX = Math.floor((w - mapW) / 2);
     const offsetY = Math.floor((h - mapH) / 2);
 
-    minimapMeta = { cols, rows, scale, mapW, mapH, offsetX, offsetY };
+    minimapMeta = { cols, rows, scale, colStep, rowStep, rowOffset, isHex, mapW, mapH, offsetX, offsetY };
+
+    function cellTopLeft(x, y) {
+      const cx = offsetX + x * colStep;
+      const cy = offsetY + y * rowStep + (isHex && x % 2 === 1 ? rowOffset : 0);
+      return [cx, cy];
+    }
 
     const terrMap = new Map();
     (state.battlefield.terrain || []).forEach(t => terrMap.set(tileKey(t.x, t.y), t.type));
@@ -396,30 +424,20 @@
       for (let x = 0; x < cols; x++) {
         const terr = terrMap.get(tileKey(x, y)) || 'open';
         ctx.fillStyle = MINIMAP_TERRAIN_COLORS[terr] || MINIMAP_TERRAIN_COLORS.open;
-        if (state.battlefield.tileMode === 'square') {
-          ctx.fillRect(offsetX + x * scale, offsetY + y * scale, scale, scale);
-        } else {  
-            if (x % 2 === 0) {
-              ctx.fillRect(offsetX + x * scale, offsetY + y * scale, scale, scale);
-            } else {
-              ctx.fillRect(offsetX + x * scale, offsetY + scale/2+ y * scale, scale, scale);
-            }
-        }
+        const [cx, cy] = cellTopLeft(x, y);
+        ctx.fillRect(cx, cy, scale, isHex ? rowStep : scale);
       }
     }
 
     const allUnits = [...state.red.units, ...state.blue.units];
     allUnits.forEach(u => {
-      const ux = offsetX + u.position.x * scale + scale / 2;
-      const uy = offsetY + u.position.y * scale + scale / 2;
+      const [cx, cy] = cellTopLeft(u.position.x, u.position.y);
+      const ux = cx + scale / 2;
+      const uy = cy + (isHex ? rowStep : scale) / 2;
       const r = Math.max(2, scale * 0.35);
-      let dy = 0;
-      if (state.battlefield.tileMode !== 'square' && u.position.x % 2 !== 0) {
-        dy+= scale/2; 
-      }
 
       ctx.beginPath();
-      ctx.arc(ux, uy + dy, r, 0, Math.PI * 2);
+      ctx.arc(ux, uy, r, 0, Math.PI * 2);
       ctx.fillStyle = u.team === 'red' ? '#ef4444' : '#60a5fa';
       ctx.fill();
     });
@@ -427,15 +445,10 @@
     if (state.selected_unit_id) {
       const selected = allUnits.find(u => u.id === state.selected_unit_id);
       if (selected) {
-        const sx = offsetX + selected.position.x * scale;
-        const sy = offsetY + selected.position.y * scale;
-        let dy = 0;
-         if (state.battlefield.tileMode !== 'square' && selected.position.x % 2 !== 0) {
-          dy+= scale/2; 
-         }
+        const [sx, sy] = cellTopLeft(selected.position.x, selected.position.y);
         ctx.strokeStyle = '#22c55e';
         ctx.lineWidth = 2;
-        ctx.strokeRect(sx, sy + dy, scale, scale);
+        ctx.strokeRect(sx, sy, scale, isHex ? rowStep : scale);
       }
     }
 
@@ -513,44 +526,54 @@
     const fallback = `/static/img/maps/plains-${tileMode}.png`;
     const mapImg   = `/static/img/maps/plains-${mapKey}.png`;
 
-    const UNIT_TILE_SIZE=TILE_SIZE -32; 
+    const isHex = tileMode !== 'square';
+    const hexGeo = isHex ? hexGeometry(TILE_SIZE) : null;
+    const UNIT_TILE_SIZE = isHex ? Math.round(Math.min(hexGeo.w, hexGeo.h) - 50) : TILE_SIZE - 50;
+
     el.bf.style.backgroundImage = `url("${mapImg}"), url("${fallback}")`;
     el.bf.style.setProperty('--tile-size', `${UNIT_TILE_SIZE}px`);
-    el.bf.style.setProperty('--bgwidth',  `${TILE_SIZE * cols + 16}px`);  // row slot (tile + border gap)
-    if (tileMode === 'square') {
-      el.bf.style.setProperty('--bgheight',  `${(TILE_SIZE + 0) * rows + 20 }px`);  // row slot (tile + border gap)
-    }else {
-      el.bf.style.setProperty('--bgheight',  `${(TILE_SIZE + 0) * rows + TILE_SIZE /2 + 20 }px`);  // row slot (tile + border gap)
+    el.bf.classList.toggle('hex-mode', isHex);
+
+    if (!isHex) {
+      // Square mode: unchanged — regular CSS grid, intrinsic sizing.
+      el.bf.style.width  = '';
+      el.bf.style.height = '';
+      el.bf.style.setProperty('--bgwidth',  `${TILE_SIZE * cols + 16}px`);
+      el.bf.style.setProperty('--bgheight', `${TILE_SIZE * rows + 20}px`);
+      el.bf.style.gridTemplateColumns = `repeat(${cols}, ${TILE_SIZE}px)`;
+    } else {
+      // Hex mode: true interlocking flat-top hexagons via absolute positioning.
+      // Columns are 0.75*width apart (they overlap), odd columns drop by half a hex height.
+      const totalW = (cols - 1) * hexGeo.colStep + hexGeo.w;
+      const totalH = (rows - 1) * hexGeo.rowStep + hexGeo.h + (cols > 1 ? hexGeo.rowOffset : 0);
+      el.bf.style.gridTemplateColumns = 'none';
+      el.bf.style.position = 'relative';
+      el.bf.style.width  = `${totalW}px`;
+      el.bf.style.height = `${totalH}px`;
+      el.bf.style.setProperty('--bgwidth',  `${totalW + 16}px`);
+      el.bf.style.setProperty('--bgheight', `${totalH + 20}px`);
     }
-
-    
-    el.bf.style.gridTemplateColumns = `repeat(${state.battlefield.width}, ${TILE_SIZE}px)`;
-
 
     for (let y = 0; y < state.battlefield.height; y++) {
       for (let x = 0; x < state.battlefield.width; x++) {
 
         const t = document.createElement('div');
         t.className = 'tile';
-        t.style.width  = `${TILE_SIZE}px`;
-        t.style.height = `${TILE_SIZE}px`;      
         t.dataset.x = x;
         t.dataset.y = y;
 
-        if (state.battlefield.tileMode === 'square') {
+        if (!isHex) {
+          t.style.width  = `${TILE_SIZE}px`;
+          t.style.height = `${TILE_SIZE}px`;
           t.style.gridRowStart    = y + 1;
           t.style.gridRowEnd      = y + 1;
           t.style.gridColumnStart = x + 1;
         } else {
-          if (x % 2 === 1) {
-            t.style.gridRowStart    = y * 2 + 2;
-            t.style.gridRowEnd      = y * 2 + 4;
-            t.style.gridColumnStart = x + 1;
-          } else {
-            t.style.gridRowStart    = y * 2 + 1;
-            t.style.gridRowEnd      = y * 2 + 3;
-            t.style.gridColumnStart = x + 1;
-          }
+          t.style.width  = `${hexGeo.w}px`;
+          t.style.height = `${hexGeo.h}px`;
+          t.style.position = 'absolute';
+          t.style.left = `${x * hexGeo.colStep}px`;
+          t.style.top  = `${y * hexGeo.rowStep + (x % 2 === 1 ? hexGeo.rowOffset : 0)}px`;
         }
 
         // Terrain class (keeps CSS colour fallback while image loads)
@@ -602,11 +625,13 @@
     if (clamped === TILE_SIZE) return;
 
     // Remember what grid cell is centred in the viewport so the view doesn't jump.
+    const isHex = state && state.battlefield.tileMode !== 'square';
+    const oldGeo = isHex ? hexGeometry(TILE_SIZE) : null;
     let focusX = 0, focusY = 0;
     const oldSize = TILE_SIZE;
     if (el.bfViewport && oldSize) {
-      focusX = (el.bfViewport.scrollLeft + el.bfViewport.clientWidth / 2) / oldSize;
-      focusY = (el.bfViewport.scrollTop + el.bfViewport.clientHeight / 2) / oldSize;
+      focusX = (el.bfViewport.scrollLeft + el.bfViewport.clientWidth / 2) / (isHex ? oldGeo.colStep : oldSize);
+      focusY = (el.bfViewport.scrollTop + el.bfViewport.clientHeight / 2) / (isHex ? oldGeo.rowStep : oldSize);
     }
 
     TILE_SIZE = clamped;
@@ -618,9 +643,10 @@
     render();
 
     // Restore the viewport around the same grid cell at the new scale.
+    const newGeo = isHex ? hexGeometry(TILE_SIZE) : null;
     if (el.bfViewport) {
-      el.bfViewport.scrollLeft = Math.max(0, focusX * TILE_SIZE - el.bfViewport.clientWidth / 2);
-      el.bfViewport.scrollTop  = Math.max(0, focusY * TILE_SIZE - el.bfViewport.clientHeight / 2);
+      el.bfViewport.scrollLeft = Math.max(0, focusX * (isHex ? newGeo.colStep : TILE_SIZE) - el.bfViewport.clientWidth / 2);
+      el.bfViewport.scrollTop  = Math.max(0, focusY * (isHex ? newGeo.rowStep : TILE_SIZE) - el.bfViewport.clientHeight / 2);
     }
 
     updateTileZoomControlLabel();

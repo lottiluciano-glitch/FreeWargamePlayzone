@@ -2,6 +2,13 @@
 
   const TILE_SIZE = 84;           // rendered tile dimensions — change this one value to rescale
 
+  // True flat-top hex geometry — kept identical to battle.js so terrain/unit placement
+  // lines up between the editor and the battle view.
+  function hexGeometry(tileSize) {
+    const w = tileSize;
+    const h = tileSize * Math.sqrt(3) / 2;
+    return { w, h, colStep: w * 0.75, rowStep: h, rowOffset: h / 2 };
+  }
 
   const root = document.getElementById('editor-root');
   if(!root) return;
@@ -640,19 +647,27 @@
 
   function render(){
     mapEl.innerHTML='';
-    //mapEl.style.gridTemplateColumns = `repeat(${width}, 64px)`;
-    mapEl.style.gridTemplateColumns = `repeat(${width}, ${TILE_SIZE}px)`;
 
-    // ✅ expose grid size to CSS
+    const isHex = tileMode !== 'square';
+    const hexGeo = isHex ? hexGeometry(TILE_SIZE) : null;
+    mapEl.classList.toggle('hex-mode', isHex);
 
-
-    mapEl.style.setProperty('--bgwidth',  `${TILE_SIZE * width + 16}px`);  // row slot (tile + border gap)
-    if (tileMode === 'square') {
-      mapEl.style.setProperty('--bgheight',  `${(TILE_SIZE + 0) * height + 16}px`);  // row slot (tile + border gap)
-    }else {
-      mapEl.style.setProperty('--bgheight',  `${(TILE_SIZE + 0) * height + TILE_SIZE /2 + 16 }px`);  // row slot (tile + border gap)
+    if (!isHex) {
+      mapEl.style.width  = '';
+      mapEl.style.height = '';
+      mapEl.style.gridTemplateColumns = `repeat(${width}, ${TILE_SIZE}px)`;
+      mapEl.style.setProperty('--bgwidth',  `${TILE_SIZE * width + 16}px`);
+      mapEl.style.setProperty('--bgheight', `${TILE_SIZE * height + 16}px`);
+    } else {
+      const totalW = (width - 1) * hexGeo.colStep + hexGeo.w;
+      const totalH = (height - 1) * hexGeo.rowStep + hexGeo.h + (width > 1 ? hexGeo.rowOffset : 0);
+      mapEl.style.gridTemplateColumns = 'none';
+      mapEl.style.position = 'relative';
+      mapEl.style.width  = `${totalW}px`;
+      mapEl.style.height = `${totalH}px`;
+      mapEl.style.setProperty('--bgwidth',  `${totalW + 16}px`);
+      mapEl.style.setProperty('--bgheight', `${totalH + 16}px`);
     }
-
 
     const mapKey   = `${tileMode}-${width}x${height}`;
     const fallback = `/static/img/maps/plains-${tileMode}.png`;
@@ -664,22 +679,18 @@
 
         const t = document.createElement('div');
         t.className = 'tile';
-        t.style.width  = `${TILE_SIZE}px`;
-        t.style.height = `${TILE_SIZE}px`;
-        if (tileMode === 'square') {
+        if (!isHex) {
+          t.style.width  = `${TILE_SIZE}px`;
+          t.style.height = `${TILE_SIZE}px`;
           t.style.gridRowStart    = y + 1;
           t.style.gridRowEnd      = y + 1;
           t.style.gridColumnStart = x + 1;
         } else {
-          if (x % 2 === 1) {
-            t.style.gridRowStart    = y * 2 + 2;
-            t.style.gridRowEnd      = y * 2 + 4;
-            t.style.gridColumnStart = x + 1;
-          } else {
-            t.style.gridRowStart    = y * 2 + 1;
-            t.style.gridRowEnd      = y * 2 + 3;
-            t.style.gridColumnStart = x + 1;
-          }
+          t.style.width  = `${hexGeo.w}px`;
+          t.style.height = `${hexGeo.h}px`;
+          t.style.position = 'absolute';
+          t.style.left = `${x * hexGeo.colStep}px`;
+          t.style.top  = `${y * hexGeo.rowStep + (x % 2 === 1 ? hexGeo.rowOffset : 0)}px`;
         }
 
         const tt = terrainAt(x, y);
