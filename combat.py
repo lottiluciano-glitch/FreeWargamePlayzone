@@ -11,6 +11,15 @@ def check_victory(state):
         state['status'] = 'finished'; state['winner'] = 'red'; add_log(state, 'Red wins!')
 
 
+def damage_get_threshold_by_experience(unit):
+    # veteran or better save on 5+, seasoned on 4+, green on 3+
+    if unit.get('experience') == 'green':
+        return 3
+    if unit.get('experience') == 'seasoned':
+        return 4
+    return 5
+
+
 def resolve_shot(state, shooter, target, at_x, at_y, reaction=False,dices=None,mode=None):
     if shooter['weapon']['ammo'] <= 0:
         return 'no_ammo'
@@ -132,12 +141,7 @@ def resolve_shot(state, shooter, target, at_x, at_y, reaction=False,dices=None,m
             if hit:
                 someHit += 1
                 add_log(state, f"{shooter['name']} Figure {f+1} Attack {a+1}: {'(OVR)' if reaction else ''} hits {target['name']} for {dmg} damage . {bonus_description} {rolled} ")
-                #veteran or more get hits on  D6=5+, seasoned on 4+, green on 3+
-                toDamage = 5 
-                if target['experience'] == 'green':
-                    toDamage = 3
-                if target['experience'] == 'seasoned':
-                    toDamage = 4  
+                toDamage = damage_get_threshold_by_experience(target)
                 diceToDamage= random.randint(1,6)
                 if diceToDamage >= toDamage or (savingThrowsMethod == 'no_saving'):
                     if savingThrowsMethod == 'experience_stats':
@@ -195,6 +199,9 @@ def resolve_attack(state, attacker, target, at_x, at_y,action,melee_resolution, 
         return {'status': 'not_adjacent', 'damage': 0, 'cover_bonus': 0}
     if target.get('smoked'):
         return {'status': 'smoked', 'damage': 0, 'cover_bonus': 0}
+
+    damage = 0
+    cover_bonus = 0
 
     #GET THE SELECTED RESOLUTION METHOD (weapon_stats or experience_stats) FROM COMBAT OPTIONS    
     combatOptions = state['battlefield'].get('combatOptions')
@@ -266,12 +273,7 @@ def resolve_attack(state, attacker, target, at_x, at_y,action,melee_resolution, 
                 someHit = True
                 add_log(state, f"{attacker['name']} Figure {f+1} Attack {a+1}:  hits {target['name']}  {aResult:.2f} <= {acc:.2f}")
 
-                #veteran or more get hits on  D6=5+, seasoned on 4+, green on 3+
-                toDamage = 5 
-                if target['experience'] == 'green':
-                    toDamage = 3
-                if target['experience'] == 'seasoned':
-                    toDamage = 4  
+                toDamage = damage_get_threshold_by_experience(target)
                 diceToDamage= random.randint(1,6)
                 if diceToDamage >= toDamage or (savingThrowsMethod == 'no_saving'):
 
