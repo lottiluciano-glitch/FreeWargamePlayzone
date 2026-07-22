@@ -381,7 +381,141 @@
     });
   }
 
+ 
   function drawMinimap() {
+    if (!el.minimap || !state) return;
+    const ctx = el.minimap.getContext('2d');
+    if (!ctx) return;
+
+    const cols = state.battlefield.width;
+    const rows = state.battlefield.height;
+    const isHex = state.battlefield.tileMode !== 'square';
+    const w = el.minimap.width;
+    const h = el.minimap.height;
+
+    const logicalRows = isHex ? rows + 0.5 : rows;
+    const scale = Math.max(1, Math.min((w - 8) / cols, (h - 8) / logicalRows));
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#3f172a07';
+    ctx.fillRect(0, 0, w, h);
+
+    const mapW = cols * scale;
+    const mapH = logicalRows * scale;
+    const offsetX = Math.floor((w - mapW) / 2);
+    const offsetY = Math.floor((h - mapH) / 2);
+
+    minimapMeta = { cols, rows, scale, mapW, mapH, offsetX, offsetY };
+
+    const terrMap = new Map();
+    (state.battlefield.terrain || []).forEach(t => terrMap.set(tileKey(t.x, t.y), t.type));
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const terr = terrMap.get(tileKey(x, y)) || 'open';
+        ctx.fillStyle = MINIMAP_TERRAIN_COLORS[terr] || MINIMAP_TERRAIN_COLORS.open;
+        if (state.battlefield.tileMode === 'square') {
+          ctx.fillRect(offsetX + x * scale, offsetY + y * scale, scale, scale);
+        } else {  
+            if (x % 2 === 0) {
+              ctx.fillRect(offsetX + x * scale, offsetY + y * scale, scale, scale);
+            } else {
+              ctx.fillRect(offsetX + x * scale, offsetY + scale/2+ y * scale, scale, scale);
+            }
+        }
+      }
+    }
+
+    const allUnits = [...state.red.units, ...state.blue.units];
+    allUnits.forEach(u => {
+      const ux = offsetX + u.position.x * scale + scale / 2;
+      const uy = offsetY + u.position.y * scale + scale / 2;
+      const r = Math.max(2, scale * 0.35);
+      let dy = 0;
+      if (state.battlefield.tileMode !== 'square' && u.position.x % 2 !== 0) {
+        dy+= scale/2; 
+      }
+
+      ctx.beginPath();
+      ctx.arc(ux, uy + dy, r, 0, Math.PI * 2);
+      ctx.fillStyle = u.team === 'red' ? '#ef4444' : '#60a5fa';
+      ctx.fill();
+    });
+
+    if (state.selected_unit_id) {
+      const selected = allUnits.find(u => u.id === state.selected_unit_id);
+      if (selected) {
+        const sx = offsetX + selected.position.x * scale;
+        const sy = offsetY + selected.position.y * scale;
+        let dy = 0;
+         if (state.battlefield.tileMode !== 'square' && selected.position.x % 2 !== 0) {
+          dy+= scale/2; 
+         }
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(sx, sy + dy, scale, scale);
+      }
+    }
+
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(offsetX - 0.5, offsetY - 0.5, mapW + 1, mapH + 1);
+  }
+
+  function updateMinimapViewportBox() {
+    if (!el.bfViewport || !el.minimapViewport || !minimapMeta) return;
+
+    const contentW = el.bf.scrollWidth;
+    const contentH = el.bf.scrollHeight;
+    if (!contentW || !contentH) return;
+
+    const visibleW = el.bfViewport.clientWidth;
+    const visibleH = el.bfViewport.clientHeight;
+    const scrollLeft = el.bfViewport.scrollLeft;
+    const scrollTop = el.bfViewport.scrollTop;
+
+    const vwRaw = (visibleW / contentW) * minimapMeta.mapW;
+    const vhRaw = (visibleH / contentH) * minimapMeta.mapH;
+    const vw = Math.min(minimapMeta.mapW, Math.max(10, vwRaw));
+    const vh = Math.min(minimapMeta.mapH, Math.max(10, vhRaw));
+    const vxRaw = minimapMeta.offsetX + (scrollLeft / contentW) * minimapMeta.mapW;
+    const vyRaw = minimapMeta.offsetY + (scrollTop / contentH) * minimapMeta.mapH;
+    const vx = Math.min(minimapMeta.offsetX + minimapMeta.mapW - vw, Math.max(minimapMeta.offsetX, vxRaw));
+    const vy = Math.min(minimapMeta.offsetY + minimapMeta.mapH - vh, Math.max(minimapMeta.offsetY, vyRaw));
+
+    el.minimapViewport.style.left = `${vx}px`;
+    el.minimapViewport.style.top = `${vy}px`;
+    el.minimapViewport.style.width = `${vw}px`;
+    el.minimapViewport.style.height = `${vh}px`;
+
+    if (el.minimapCoords) {
+      const centerX = Math.floor((scrollLeft + visibleW / 2) / TILE_SIZE);
+      const centerY = Math.floor((scrollTop + visibleH / 2) / TILE_SIZE);
+      el.minimapCoords.textContent = `(${centerX},${centerY})`;
+    }
+
+    // ── Auto-reposition minimap based on scroll position ─────────────────────
+    const maxScrollLeft = el.bfViewport.scrollWidth - el.bfViewport.clientWidth;
+    const minimapPanel = el.minimapWrap && el.minimapWrap.closest('.battle-minimap-panel');
+    if (minimapPanel && maxScrollLeft > 0) {
+      const atRight = scrollLeft >= maxScrollLeft - 2;
+      const atLeft  = scrollLeft <= 2;
+
+      if (atRight && minimapPosition === 'right') {
+        // Fully scrolled right — move minimap to top-left
+        minimapPanel.style.right = '';
+        minimapPanel.style.left  = '12px';
+        minimapPosition = 'left';
+      } else if (atLeft && minimapPosition === 'left') {
+        // Fully scrolled left while minimap is top-left — move it back to top-right
+        minimapPanel.style.left  = '';
+        minimapPanel.style.right = '12px';
+        minimapPosition = 'right';
+      }
+    }
+  }
+
+ 
+  function XdrawMinimap() {
     if (!el.minimap || !state) return;
     const ctx = el.minimap.getContext('2d');
     if (!ctx) return;
@@ -457,7 +591,7 @@
     ctx.strokeRect(offsetX - 0.5, offsetY - 0.5, mapW + 1, mapH + 1);
   }
 
-  function updateMinimapViewportBox() {
+  function XupdateMinimapViewportBox() {
     if (!el.bfViewport || !el.minimapViewport || !minimapMeta) return;
 
     const contentW = el.bf.scrollWidth;
@@ -528,7 +662,7 @@
 
     const isHex = tileMode !== 'square';
     const hexGeo = isHex ? hexGeometry(TILE_SIZE) : null;
-    const UNIT_TILE_SIZE = isHex ? Math.round(Math.min(hexGeo.w, hexGeo.h) - 50) : TILE_SIZE - 50;
+    const UNIT_TILE_SIZE = isHex ? Math.round(Math.min(hexGeo.w, hexGeo.h ) * 0.6 ) : Math.round(TILE_SIZE *0.7);
 
     el.bf.style.backgroundImage = `url("${mapImg}"), url("${fallback}")`;
     el.bf.style.setProperty('--tile-size', `${UNIT_TILE_SIZE}px`);

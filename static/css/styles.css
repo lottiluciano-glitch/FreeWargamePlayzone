@@ -140,7 +140,7 @@ button.team.active{background:#22c55e;color:#052e16}
 /*.tile.blue{outline:2px solid var(--blue)}*/
 .tile.sel{box-shadow:0 0 0 6px #22c55e inset;z-index: 6}
 .tile.smoke{box-shadow:0 0 0 2px #b7bbb9 inset}
-.tile .hp{font-size:10px;color:#fef3c7;position:absolute;bottom:2px;left:2px}
+.tile .hp{font-size:12px;color:#fef3c7;position:absolute;bottom:20%;left:25%}
 
 
 
@@ -891,8 +891,8 @@ background-color: transparent;
 /* ── Armor shield badge (top-right of unit slot) ─────────────────────────── */
 .unit-armor-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 20%;
+  right: 60%;
   background: rgba(15, 23, 42, 0.0);
   color: #f5e725;
   font-size: 9px;
@@ -907,8 +907,8 @@ background-color: transparent;
 /* ── Down badge (top-right of unit slot) ─────────────────────────── */
 .unit-down-badge {
   position: absolute;
-  top: 48px;
-  right: 28px;
+  top: 48%;
+  right: 28%;
   background: rgba(15, 23, 42, 0.0);
   color: #f5e725;
   font-size: 12px;
@@ -923,8 +923,8 @@ background-color: transparent;
 /* ── Stress badge (top-right of unit slot) ─────────────────────────── */
 .unit-stress-badge {
   position: absolute;
-  top: 12px;
-  right: 30px;
+  top: 25%;
+  right: 25%;
   background: rgba(231, 235, 19, 0.9);
   color: #ec1010e1;
   font-size: 9px;
@@ -938,8 +938,8 @@ background-color: transparent;
 /* ── Overwatch badge (top-right of unit slot) ─────────────────────────── */
 .unit-overwatch-badge {
   position: absolute;
-  top: 16px;
-  right: 36px;
+  top: 35%;
+  right: 35%;
   background: rgba(80, 13, 189, 0.9);
   color: #ec1010e1;
   font-size: 12px;
