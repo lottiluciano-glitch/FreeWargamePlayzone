@@ -924,13 +924,14 @@ def api_action(game_id):
 
             # Move along path (triggering overwatch reactions)
             for (sx, sy) in path:
-                if trigger_overwatch_reactions(st, u, sx, sy) == 'stopped':
+                overWatch_result = trigger_overwatch_reactions(st, u, sx, sy)
+                if overWatch_result == 'stopped':
                     add_log(st, f"{u['name']} charge stopped by overwatch fire at ({sx},{sy})")
                     u['acted'] = True
                     u['position'] = {'x': sx, 'y': sy}
                     save_game(st)
                     return jsonify({'ok': True})
-                if trigger_overwatch_reactions(st, u, sx, sy) == 'killed':
+                if overWatch_result == 'killed':
                     add_log(st, f"{u['name']} killed by overwatch fire at ({sx},{sy}) while charging")
                     u['acted'] = True
                     check_victory(st)
