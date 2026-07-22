@@ -19,6 +19,11 @@
     {
       "id": "custom",
       "name": "Custom"
+    },
+    {
+      "id": "special",
+      "name": "Special"
     }
+
   ]
 }
