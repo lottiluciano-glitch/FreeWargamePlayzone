@@ -1,9 +1,15 @@
 import math
 
+
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 import json, uuid, os, threading, datetime, random
 from pathlib import Path
 from heapq import heappush, heappop
+
+from common import TERRAIN_TYPES, TERRAIN_COST, DEFAULT_WEAPON, RNG 
+from common import in_bounds, neighbor_deltas, is_adjacent, terrain_map, tile_type, tile_cost, range_distance, los_clear_and_cover, axial_to_cube, cube_distance
+from common import unit_at, find_unit, add_log
+from combat import check_victory, resolve_shot, resolve_attack, trigger_overwatch_reactions
 
 app = Flask(__name__)
 BASE = Path(__file__).parent
@@ -39,6 +45,34 @@ def write_json(p: Path, data):
         json.dump(data, f, indent=2)
 
 
+# Single source of truth for combat options: (type, default) per key.
+# <POF> add new combat options here — this is the ONLY place to touch.
+COMBAT_OPTIONS_SCHEMA = {
+    'traverseFriendlyUnits':       (bool, True),
+    'chargeTraverseFriendlyUnits': (bool, False),
+    'enterEnemyTile':              (bool, False),
+    'stacking':                    (bool, False),
+    'resolutionMethod':            (str,  'weapon_stats'),   # or 'standard'
+    'savingThrowsMethod':          (str,  'no_saving'),      # or 'standard'
+    'friendlyFire':                (bool, False),
+    'contemporaryMelee':           (bool, False),
+    'terrainCoverBonus':           (bool, True),
+    'moraleChecks':                (bool, False),
+    'pinMoraleChecksAsFUBAR':      (bool, False),
+    'routThreshold':               (int,  25),
+}
+
+def normalize_combat_options(raw_co):
+    """Build a fully-populated combatOptions dict from a (possibly partial /
+    possibly None) raw dict, applying types and defaults from
+    COMBAT_OPTIONS_SCHEMA. Unknown keys in raw_co are silently dropped."""
+    raw_co = raw_co or {}
+    return {
+        key: cast(raw_co.get(key, default))
+        for key, (cast, default) in COMBAT_OPTIONS_SCHEMA.items()
+    }
+
+
 ##LL Scenario 
 SCENARIOS_PATH = DATA / 'game_type_scenarios.json'
 SCENARIOS = read_json(SCENARIOS_PATH, default={})
@@ -50,39 +84,8 @@ GAME_TYPES = read_json(DATA / 'game_types.json')['game_types']
 TERR_TEMPLATES_PATH = DATA / 'game_type_terrains.json'
 TERR_TEMPLATES = read_json(TERR_TEMPLATES_PATH, default={})
 
-TERRAIN_TYPES = ['open','wall','rocks','rough','cover','water','forest','highground','hstreet_so_ne','hstreet_so_n','hstreet_s_no','hstreet_s_ne','hstreet_se_no','hstreet_se_n','hstreet_s_n', 'qstreet_e_w', 'qstreet_e_n_w', 'qstreet_n_e_s', 'qstreet_n_w_s', 'qstreet_w_s_e', 'qstreet_n_e', 'qstreet_n_w', 'qstreet_s_e', 'qstreet_s_w']
-
-TERRAIN_COST = {
-    'open': 1,
-    'cover': 1,
-    'rough': 2,
-    'water': 9999,
-    'forest': 2,
-    'highground': 1,
-    'wall': 9999,
-    'rocks': 9999,
-    'hstreet_so_ne': 0.5,
-    'hstreet_so_n': 0.5,
-    'hstreet_s_no': 0.5,
-    'hstreet_s_ne': 0.5,
-    'hstreet_se_no': 0.5,
-    'hstreet_se_n': 0.5,
-    'hstreet_s_n': 0.5,
-    'qstreet_e_w': 0.5,
-    'qstreet_e_n_w': 0.5,
-    'qstreet_n_e_s': 0.5,
-    'qstreet_n_w_s': 0.5,
-    'qstreet_w_s_e': 0.5,
-    'qstreet_n_e': 0.5,
-    'qstreet_n_w': 0.5,
-    'qstreet_s_e': 0.5,
-    'qstreet_s_w': 0.5
-}
 
 
-# Ranged parameters
-DEFAULT_WEAPON = {'name':'Rifle','damage':1,'armouredDmg':0,'range':4,'accuracy':0.70,'ammo':6,'max_ammo':6,'recoil':0.10}
-RNG = random.Random(); RNG.seed()
 
 # Game state management
 
@@ -108,6 +111,50 @@ def list_games_by_type(game_type):
     return open_games, finished_games
 
 
+def get_template_summary(game_type):
+    tpl = TERR_TEMPLATES.get(game_type) or {}
+    width = int(tpl.get('width', 10))
+    height = int(tpl.get('height', 10))
+    era = tpl.get('era', 'modern')
+
+    units = tpl.get('units') if isinstance(tpl.get('units'), dict) else {}
+    red_units = units.get('red', []) if isinstance(units.get('red', []), list) else []
+    blue_units = units.get('blue', []) if isinstance(units.get('blue', []), list) else []
+
+    combat_options = normalize_combat_options(tpl.get('combatOptions'))
+    combat_option_labels = {
+        'traverseFriendlyUnits': 'Traverse Friendly Units',
+        'chargeTraverseFriendlyUnits': 'Charge Traverse Friendly Units',
+        'enterEnemyTile': 'Enter Enemy Tile',
+        'stacking': 'Stacking',
+        'resolutionMethod': 'Resolution Method',
+        'savingThrowsMethod': 'Saving Throws Method',
+        'friendlyFire': 'Friendly Fire',
+        'contemporaryMelee': 'Contemporary Melee',
+        'terrainCoverBonus': 'Terrain Cover Bonus',
+        'moraleChecks': 'Morale Checks',
+        'pinMoraleChecksAsFUBAR': 'Pin Morale Checks As FUBAR',
+        'routThreshold': 'Rout Threshold',
+    }
+
+    return {
+        'era': era,
+        'width': width,
+        'height': height,
+        'red_units': len(red_units),
+        'blue_units': len(blue_units),
+        'total_units': len(red_units) + len(blue_units),
+        'combat_options': [
+            {
+                'key': k,
+                'label': combat_option_labels.get(k, k),
+                'value': v,
+            }
+            for k, v in combat_options.items()
+        ],
+    }
+
+
 def create_new_game(game_type: str, name: str, scenario_tpl=None):
     gid = str(uuid.uuid4())
     #ttpl = TERR_TEMPLATES.get(game_type) or {}
@@ -124,23 +171,7 @@ def create_new_game(game_type: str, name: str, scenario_tpl=None):
     blue_tpl = units_tpl.get('blue', [])
     # Carry saved combat options into the live game; fall back to safe defaults
     # so games created before the panel was added still work correctly.
-    raw_co = ttpl.get('combatOptions') or {}
-
-
-    combatOptions = {
-        'traverseFriendlyUnits': bool(raw_co.get('traverseFriendlyUnits', True)),
-        'chargeTraverseFriendlyUnits': bool(raw_co.get('chargeTraverseFriendlyUnits', True)),
-        'enterEnemyTile': bool(raw_co.get('enterEnemyTile', True)),
-        'stacking':              bool(raw_co.get('stacking', True)),
-        'resolutionMethod':      str(raw_co.get('resolutionMethod', 'weapon_stats')),  # or 'standard'
-        'savingThrowsMethod':     str(raw_co.get('savingThrowsMethod', 'no_saving')),  # or 'standard'
-        'friendlyFire':          bool(raw_co.get('friendlyFire', False)),
-        'terrainCoverBonus':     bool(raw_co.get('terrainCoverBonus', True)),
-        'moraleChecks':          bool(raw_co.get('moraleChecks', False)),
-        'pinMoraleChecksAsFUBAR': bool(raw_co.get('pinMoraleChecksAsFUBAR', False)),
-        'routThreshold':         int(raw_co.get('routThreshold', 25)),
-        # <POF> add new combat options here (mirror app.py POST handler)
-    }
+    combatOptions = normalize_combat_options(ttpl.get('combatOptions'))
 
     #<POF> add more unit properties here as needed (e.g., movement range, special abilities, etc.) as parameter
     def mk_unit(team, i, x, y, name=None, type=None,n_of_figures=None, weapon=None, hp=None, armor=None, sh=None, n_of_attacks=None, experience=None, speed=None, impassable=None,invalidActions=None):        
@@ -286,77 +317,18 @@ def save_game(state):
         print(f"Error saving game index: {e}")
 
 
-def find_unit(state, unit_id):
-    for side in ['red','blue']:
-        for u in state[side]['units']:
-            if u['id'] == unit_id:
-                return side, u
-    return None, None
 
 
-def unit_at(state, x, y):
-    for side in ['red','blue']:
-        for u in state[side]['units']:
-            if u['position']['x']==x and u['position']['y']==y:
-                return side, u
-    return None, None
+def adjacent_enemy(st,unit):
+    ux, uy = unit["position"]["x"], unit["position"]["y"]
 
+    for dx,dy in neighbor_deltas(st, ux):
+        x, y = ux+dx, uy+dy
+        oside, enemy = unit_at(st, x, y)
+        if enemy and oside != unit['team']:
+            return enemy
+    return None
 
-def in_bounds(state, x, y):
-    return 0 <= x < state['battlefield']['width'] and 0 <= y < state['battlefield']['height']
-
-
-def neighbor_deltas(state, x):
-    if state['battlefield']['tileMode'] == 'square':
-        return [(0, 1), (0, -1), (-1, 0), (1, 0)]
-    if x % 2 == 0:
-        return [(0, 1), (0, -1), (-1, 0), (-1, -1), (1, 0), (1, -1)]
-    return [(0, 1), (0, -1), (-1, 0), (-1, 1), (1, 0), (1, 1)]
-
-
-def is_adjacent(state, x1, y1, x2, y2):
-    for dx, dy in neighbor_deltas(state, x1):
-        if x1 + dx == x2 and y1 + dy == y2:
-            return True
-    return False
-
-
-def terrain_map(state):
-    tdict = {}
-    for t in state['battlefield'].get('terrain', []):
-        tdict[(t['x'], t['y'])] = t.get('type','open')
-    return tdict
-
-
-def tile_type(state, x, y):
-    return terrain_map(state).get((x,y),'open')
-
-#remember this is duplicated in battle.js as well, so any changes here should be reflected there for consistency between frontend and backend logic
-def tile_cost(unit_ref, action, state, x, y):
-    unit = None
-    if isinstance(unit_ref, dict):
-        unit = unit_ref
-    elif isinstance(unit_ref, str):
-        _, unit = find_unit(state, unit_ref)
-
-    ttype = tile_type(state, x, y)
-    if action in ('move', 'run', 'charge'):
-        if unit and ttype in unit.get('impassable', []):
-            return 9999  # Impassable due to unit restriction
-        if ttype in ('rocks', 'water'):
-            return 9999  # Impassable
-        if ttype in ('hstreet_so_ne', 'hstreet_so_n', 'hstreet_s_no', 'hstreet_s_ne', 'hstreet_se_no', 'hstreet_se_n', 'hstreet_s_n', 'qstreet_e_w', 'qstreet_e_n_w', 'qstreet_n_e_s', 'qstreet_n_w_s', 'qstreet_w_s_e', 'qstreet_n_e', 'qstreet_n_w', 'qstreet_s_e', 'qstreet_s_w'):
-            return 0.5  # Reduced cost for streets
-        if ttype in ( 'rough','wall','forest','highground'):
-            if action == 'move' and unit and unit.get('speed') == 1:
-                return 1  # Allow normal cost for slow units moving into difficult terrain
-            return 2  # Increased cost for cover and rough terrain
-        return 1  # Normal cost for movement
-    return TERRAIN_COST.get(ttype, 1)
-
-
-def add_log(state, msg):
-    state['log'].append(msg)
 
 
 def sanitize_editor_template(data):
@@ -370,21 +342,7 @@ def sanitize_editor_template(data):
 
     # Read and sanitise combatOptions — unknown keys are silently dropped so
     # only explicitly declared options are ever persisted.
-    raw_co = data.get('combatOptions') or {}
-    combat_options = {
-        'traverseFriendlyUnits': bool(raw_co.get('traverseFriendlyUnits', True)),
-        'chargeTraverseFriendlyUnits': bool(raw_co.get('chargeTraverseFriendlyUnits', False)),
-        'enterEnemyTile': bool(raw_co.get('enterEnemyTile', False)),
-        'stacking': bool(raw_co.get('stacking', False)),
-        'resolutionMethod': str(raw_co.get('resolutionMethod', 'weapon_stats')),
-        'savingThrowsMethod': str(raw_co.get('savingThrowsMethod', 'no_saving')),
-        'friendlyFire': bool(raw_co.get('friendlyFire', False)),
-        'terrainCoverBonus': bool(raw_co.get('terrainCoverBonus', True)),
-        'moraleChecks': bool(raw_co.get('moraleChecks', False)),
-        'pinMoraleChecksAsFUBAR': bool(raw_co.get('pinMoraleChecksAsFUBAR', False)),
-        'routThreshold': int(raw_co.get('routThreshold', 25)),
-        # <POF> add new combat options here
-    }
+    combat_options = normalize_combat_options(data.get('combatOptions'))
 
     clean_terr = []
     for t in terr:
@@ -510,125 +468,6 @@ def astar_path(unit_id, action, state, start, goal):
             heappush(openh, (ng + h(nx,ny), ng, (nx,ny), (x,y)))
     return None
 
-# Hex LOS helpers
-def cube_distance(a, b):
-    return max(abs(a[0]-b[0]), abs(a[1]-b[1]), abs(a[2]-b[2]))
-
-def cube_lerp(a, b, t):
-    return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t)
-
-def cube_round(cube):
-    rx = round(cube[0])
-    ry = round(cube[1])
-    rz = round(cube[2])
-    x_diff = abs(rx - cube[0])
-    y_diff = abs(ry - cube[1])
-    z_diff = abs(rz - cube[2])
-    if x_diff > y_diff and x_diff > z_diff:
-        rx = -ry - rz
-    elif y_diff > z_diff:
-        ry = -rx - rz
-    else:
-        rz = -rx - ry
-    return (rx, ry, rz)
-
-def axial_to_cube(q, r):
-    x = q
-    z = r
-    y = -x - z
-    return (x, y, z)
-
-def cube_to_axial(cube):
-    x, y, z = cube
-    q = x
-    r = z
-    return (q, r)
-
-def hex_line(q1, r1, q2, r2):
-    start = axial_to_cube(q1, r1)
-    end = axial_to_cube(q2, r2)
-    N = cube_distance(start, end)
-    results = []
-    for i in range(N + 1):
-        t = 1.0 / N * i if N > 0 else 0
-        lerped = cube_lerp(start, end, t)
-        rounded = cube_round(lerped)
-        axial = cube_to_axial(rounded)
-        results.append(axial)
-    return results
-
-
-def range_distance(state, x1, y1, x2, y2):
-    if state['battlefield']['tileMode'] == 'hex':
-        q1 = x1
-        r1 = y1 - (x1 // 2)
-        q2 = x2
-        r2 = y2 - (x2 // 2)
-        a1 = axial_to_cube(q1, r1)
-        a2 = axial_to_cube(q2, r2)
-        return cube_distance(a1, a2)
-    return math.sqrt ((x1 - x2) ** 2 + (y1 - y2) ** 2)  
-
-# LOS helper with corner clipping & soft cover
-
-def los_clear_and_cover(state, x1, y1, x2, y2):
-    tile_mode = state['battlefield']['tileMode']
-    occupied = {(u['position']['x'], u['position']['y']) for u in state['red']['units']+state['blue']['units']}
-    if tile_mode == 'hex':
-        # For hex, use hex line drawing
-        q1 = x1
-        r1 = y1 - (x1 // 2)
-        q2 = x2
-        r2 = y2 - (x2 // 2)
-        tiles = hex_line(q1, r1, q2, r2)
-        pathStr = ' => '.join([f'({q},{r})' for q,r in tiles])
-        cover_tiles = 0
-        for q, r in tiles[1:-1]:  # exclude start and end
-            x = q
-            y = r + (q // 2)
-            if(x == x2 and y == y2) or (x == x1 and y == y1):
-                continue
-            if not in_bounds(state, x, y):
-                return False, 0,pathStr
-            tt = tile_type(state, x, y)
-            if tt in ('wall', 'forest', 'highground', 'rocks'):
-                return False, 0 ,pathStr
-            if (x, y) in occupied:
-                return False, 0, pathStr
-            if tt == 'cover':
-                cover_tiles += 1
-        return True, cover_tiles,pathStr
-    else:
-        # Square mode with oversampling
-        import math
-        dx = x2 - x1
-        dy = y2 - y1
-        dist = math.sqrt(dx**2 + dy**2)
-        if dist == 0:
-            return True, 0 ,""
-        num_samples = max(1, int(dist * 10))  # 10 samples per unit
-        tiles_passed = set()
-        for i in range(1, num_samples + 1):  # exclude start (i=0), include end if i==num_samples but we'll exclude later
-            t = i / num_samples
-            px = x1+0.5 + t * dx
-            py = y1+0.5 + t * dy
-            tx = int(px)
-            ty = int(py)
-            if in_bounds(state, tx, ty):
-                tiles_passed.add((tx, ty))
-        # Exclude start and end tiles
-        tiles_passed.discard((x1, y1))
-        tiles_passed.discard((x2, y2))
-        cover_tiles = 0
-        for tx, ty in tiles_passed:
-            tt = tile_type(state, tx, ty)
-            if tt in ('wall', 'forest', 'highground', 'rocks'):
-                return False, 0,""
-            if (tx, ty) in occupied:
-                return False, 0,""
-            if tt == 'cover':
-                cover_tiles += 1
-        return True, cover_tiles ,""
 
 
 def end_turn_logic(state):
@@ -732,6 +571,9 @@ def compute_possible_actions(state):
     for a in actions:
         a['enabled'] = True
     for a in actions:
+        if a['action']=='charge' and adjacent_enemy(state, u) != None:
+            a['enabled'] = False
+
         if a['action']=='shoot' and u['weapon']['ammo'] <= 0:
             a['enabled'] = False
         if a['action']=='rally' and u['stress'] == 0:    
@@ -740,302 +582,6 @@ def compute_possible_actions(state):
             a['enabled'] = False
     return actions
 
-
-def check_victory(state):
-    if not state['red']['units']:
-        state['status'] = 'finished'; state['winner'] = 'blue'; add_log(state, 'Blue wins!')
-    elif not state['blue']['units']:
-        state['status'] = 'finished'; state['winner'] = 'red'; add_log(state, 'Red wins!')
-
-
-def resolve_shot(state, shooter, target, at_x, at_y, reaction=False,dices=None,mode=None):
-    if shooter['weapon']['ammo'] <= 0:
-        return 'no_ammo'
-    if target.get('smoked'):
-        return 'smoked'
-    
-    ux, uy = shooter['position']['x'], shooter['position']['y']
-    tx, ty = at_x, at_y
-    man = range_distance(state, ux, uy, tx, ty)
-    if man < 1 or man > shooter['weapon']['range']:
-        return 'out_of_range'
-    los_ok, cover_tiles ,pathStr= los_clear_and_cover(state, ux, uy, tx, ty)
-    if not los_ok:
-        #return 'no_los', ux, uy, tx, ty, pathStr
-        return 'no_los'
-    
-
-    #GET THE SELECTED RESOLUTION METHOD (weapon_stats or experience_stats) FROM COMBAT OPTIONS    
-    combatOptions = state['battlefield'].get('combatOptions')
-    resolutionMethod = combatOptions.get('resolutionMethod') if combatOptions else 'weapon_stats'
-    savingThrowsMethod = combatOptions.get('savingThrowsMethod') if combatOptions else 'no_saving'
-    add_log(state, f" Combat mode {resolutionMethod} Saving throws mode: {savingThrowsMethod} ")
-
-    #compute probability to hit FOR WEAPON_STATS RESOLUTION METHOD
-
-    if resolutionMethod == 'weapon_stats':
-        acc = shooter['weapon']['accuracy'] - shooter.get('recoil_penalty',0.0) - min(0.3, 0.1*cover_tiles)
-        acc = max(0.05, min(0.95, acc))
-        bonus_description = f"Notes: base is {acc} "
-
-        target_tile= tile_type(state, tx, ty)
-        if target_tile in ('cover','forest'):
-            acc = max(0.05,  acc - 0.1)  # -10% accuracy if target is in cover or woods
-            bonus_description += "-10% to hit for target in cover/woods. "
-
-        if target_tile in ('wall','rough'):
-            acc = max(0.05,  acc - 0.2)  # -20% accuracy if target is in wall or rough
-            bonus_description += "-20% to hit for target in wall/rough. "
-
-        if target.get('status') == 'down':
-            acc = max(0.05,  acc - 0.2)  # -20% accuracy if target is down
-            bonus_description += "-20% to hit for target down. "
-
-        # High ground accuracy bonus
-        if target_tile == 'highground':
-            acc = max(0.05,  acc - 0.1)  # -10% accuracy if target is in high ground
-            bonus_description += "-10% to hit for target in high ground. "
-
-
-    if resolutionMethod == 'experience_stats':
-        bonus_description = "Notes: base is D6 3+ "
-        # if using experience-based resolution, compute the required d6 roll to hit based on shooter's experience
-        d6ToHit = 3 + (shooter.get('experience') == 'green') 
-        if shooter.get('experience') == 'green':
-            bonus_description += "Base +1 to hit for green experience. "
-        target_tile= tile_type(state, tx, ty)
-
-        if target_tile in ('cover','forest'):
-            d6ToHit += 1  # +1 to hit roll if target is in cover or woods
-            bonus_description += "+1 to hit for target in cover/woods. "
-
-        if target_tile in ('wall','rough'):
-            d6ToHit += 2  # +2 to hit roll if target is in wall or rough
-            bonus_description += "+2 to hit for target in wall/rough. "
-
-        if target.get('armor',0) < 1 and target.get('n_of_figures') < 3:
-            d6ToHit += 1  # +1 to hit roll if target has fewer than 3 figures and not a vehicle (i.e., small team)
-            bonus_description += "+1 to hit for small team target. "
-
-        if target.get('status') == 'down':
-            d6ToHit += 2  # +2 to hit roll if target is down
-            bonus_description += "+2 to hit for target down. "
-
-        if  shooter['weapon']['range'] > 2 and man == 1:
-            d6ToHit -= 1  # -1 to hit roll point blank shooting 
-            bonus_description += "-1 to hit for point blank shooting. "
-        
-        if mode == 'advance':
-            d6ToHit += 1  # +1 to hit roll if it's an advance action
-            bonus_description += "+1 to hit for advance action. "
-        
-
-
-
-    shootingFigures = shooter['n_of_figures']    
-    someHit=0
-    rolled=""
-    for f in range(max(1, int(shootingFigures))):
-        for a in range(shooter.get('n_of_attacks', 1)):
-
-            #------------------------------------------------
-            #compute hit based on selected resolution method
-            #------------------------------------------------
-            if resolutionMethod == 'weapon_stats':
-                hit = RNG.random() <= acc
-                rolled=""
-            if resolutionMethod == 'experience_stats':
-                diceResult= random.randint(1,6) 
-                externalDice = dices['rolls'].pop(0) if dices else None
-                if externalDice is not None:
-                    diceResult = externalDice['value']
-                rolled = f" Rolled a {diceResult}. "
-                hit = diceResult >= d6ToHit
-
-
-            if target['armor'] > 0:
-                #an anti-tank weapon will generate at list 1 damage even if the armor negate the damage
-                dmg = max(1, shooter['weapon']['armouredDmg'] - target['armor']  + (1 if shooter.get('steady') else 0))
-                add_log(state, f"ARMORED: SHELL: {shooter['weapon']['armouredDmg']} ARMOR: {target['armor']} ")
-            else:
-                dmg = shooter['weapon']['damage'] + (1 if shooter.get('steady') else 0)
-            # not sure if the folowing  make sense set it to 0 for the moment
-            #cover_bonus_shield = 1 if tile_type(state, tx, ty)=='cover' else 0
-            cover_bonus_shield = 0
-
-
-            effective_shields = target.get('shields',0) + cover_bonus_shield
-            if hit:
-                someHit += 1
-                add_log(state, f"{shooter['name']} Figure {f+1} Attack {a+1}: {'(OVR)' if reaction else ''} hits {target['name']} for {dmg} damage . {bonus_description} {rolled} ")
-                #veteran or more get hits on  D6=5+, seasoned on 4+, green on 3+
-                toDamage = 5 
-                if target['experience'] == 'green':
-                    toDamage = 3
-                if target['experience'] == 'seasoned':
-                    toDamage = 4  
-                diceToDamage= random.randint(1,6)
-                if diceToDamage >= toDamage or (savingThrowsMethod == 'no_saving'):
-                    if savingThrowsMethod == 'experience_stats':
-                        add_log(state, f"Damage roll {diceToDamage} >= {toDamage} [{target['experience']}], DAMAGED!")
-                    if effective_shields>0:
-                        used = min(effective_shields, dmg)
-                        persist = target.get('shields',0)
-                        if persist >= used:
-                            target['shields'] = persist - used
-                        else:
-                            target['shields'] = 0
-                        dmg -= used
-                    if dmg>0:
-                        target['hp'] -= dmg
-                    if target['hp'] <= 0:
-                        if target['n_of_figures'] > 1:
-                            target['n_of_figures'] -= 1
-                            target['hp'] = target['max_hp']
-                            add_log(state, f"{target['name']} loses a figure but is still standing with {target['n_of_figures']} figures left!")
-                        else:    
-                            break
-                else:
-                    add_log(state, f"Damage roll {diceToDamage} < {toDamage} [{target['experience']}], so no damage applies!")
-            else:
-                add_log(state, f"{shooter['name']} Figure {f+1} Attack {a+1}: {'(OVR)' if reaction else ''} misses {target['name']} . {bonus_description} {rolled}")        
-    shooter['weapon']['ammo'] -= 1
-    shooter['recoil_penalty'] = shooter.get('recoil_penalty',0.0) + shooter['weapon']['recoil']
-    shooter['steady'] = False
-    if someHit > 0:
-
-        if target.get('n_of_figures', 1) >1 and someHit >= target.get('n_of_figures', 1):
-            add_log(state, f"{shooter['name']} {'(OVR)' if reaction else ''} hits so many figures that {target['name']} is disbanded!")
-            side_t = target['team']
-            state[side_t]['units'] = [x for x in state[side_t]['units'] if x['id'] != target['id']]
-            check_victory(state)
-            return 'disbanded'
-        
-        #add_log(state, f"{shooter['name']} {'(OVR)' if reaction else ''} hits {target['name']} for {shooter['weapon']['damage']} dmg")
-        target['stress'] = target.get('stress', 0) + 1  # increase stress on hit
-        if target['hp'] <= 0:
-            add_log(state, f"{target['name']} {target['type']} is eliminated")
-            side_t = target['team']
-            state[side_t]['units'] = [x for x in state[side_t]['units'] if x['id'] != target['id']]
-            check_victory(state)
-            return 'killed'
-        else:
-            return 'stopped' if reaction else 'hit'
-    else:
-        add_log(state, f"{shooter['name']} {'(OVR)' if reaction else ''} misses {target['name']} ")
-    return 'hit' if someHit > 0 else 'miss'
-
-
-def resolve_attack(state, attacker, target, at_x, at_y, allow_reaction=True):
-    if not is_adjacent(state, attacker['position']['x'], attacker['position']['y'], at_x, at_y):
-        return {'status': 'not_adjacent', 'damage': 0, 'cover_bonus': 0}
-    if target.get('smoked'):
-        return {'status': 'smoked', 'damage': 0, 'cover_bonus': 0}
-
-    # Defender in overwatch reacts before the melee attacker resolves the attack.
-    # Guard with allow_reaction to avoid recursive reaction loops.
-    if allow_reaction and target.get('status') == 'overwatch' and target.get('overwatch_ready'):
-        add_log(state, f"{target['name']} reacts from OVERWATCH against {attacker['name']} before melee")
-        target['overwatch_ready'] = False
-        target['status'] = 'reacted'
-        target['acted'] = True
-        reaction_result = resolve_attack(
-            state,
-            target,
-            attacker,
-            attacker['position']['x'],
-            attacker['position']['y'],
-            allow_reaction=False,
-        )
-        add_log(state, f"CounterOverwatchMelee -> {reaction_result.get('status')}")
-        if reaction_result.get('status') == 'killed':
-            return {'status': 'attacker_killed_by_reaction', 'damage': 0, 'cover_bonus': 0}
-
-    weapon=attacker.get('weapon') or DEFAULT_WEAPON
-    attackerFigures = attacker.get('n_of_figures', 1)
-
-
-    acc = weapon.get('accuracy') - weapon.get('recoil_penalty',0.0) 
-    acc = max(0.05, min(0.95, acc))
-
-    if target['armor'] > 0:
-        #an anti-tank weapon will generate at list 1 damage even if the armor negate the damage
-        dmg = max(1, attacker['weapon']['armouredDmg'] - target['armor']  + (1 if attacker.get('steady') else 0))
-    else:
-        dmg = attacker['weapon']['damage'] + (1 if attacker.get('steady') else 0)
-
-    # melee attack with shooting weapon suffers accuracy malus but can still hit with low damage  
-    if weapon.get('range', 1) > 1:
-        malus=True
-        dmg = 1
-    else:
-        malus=False
-
-    cover_bonus = 1 if tile_type(state, at_x, at_y) == 'cover' else 0
-
-    someHit=False
-    for f in range(max(1, int(attackerFigures))):
-        for a in range(attacker.get('n_of_attacks', 1)):
-            hit = RNG.random() <= acc
-            if hit:
-                someHit = True
-                if malus:
-                    dmg = max(1, round(dmg / 2))  # apply malus to damage
-                damage = dmg
-                effective_shields = target.get('shields', 0) + cover_bonus
-                if effective_shields > 0:
-                    used = min(effective_shields, damage)
-                    persist = target.get('shields', 0)
-                    if persist >= used:
-                        target['shields'] = persist - used
-                    else:
-                        target['shields'] = 0
-                    damage -= used
-                if damage > 0:
-                    target['hp'] -= damage
-                    add_log(state, f"{attacker['name']} Figure {f+1} Attack {a+1}:  hits {target['name']} for {damage} damage!")
-
-                if target['hp'] <= 0:
-                    if target['n_of_figures'] > 1:
-                        target['n_of_figures'] -= 1
-                        target['hp'] = target['max_hp']
-                        add_log(state, f"{target['name']} loses a figure but is still standing with {target['n_of_figures']} figures left!") 
-                    else:
-                        side_t = target['team']
-                        state[side_t]['units'] = [x for x in state[side_t]['units'] if x['id'] != target['id']]
-                        check_victory(state)
-                        return {'status': 'killed', 'damage': damage, 'cover_bonus': cover_bonus}
-            else:
-                add_log(state, f"{attacker['name']} Figure {f+1} Attack {a+1}:  misses {target['name']}")           
-
-    if not someHit:
-            return {'status': 'missed', 'damage': 0, 'cover_bonus': 0}
-    else:
-            return {'status': 'hit', 'damage': damage, 'cover_bonus': cover_bonus}
-
-
-def trigger_overwatch_reactions(state, moving_unit, step_x, step_y):
-    enemy_side = 'red' if moving_unit['team']=='blue' else 'blue'
-    enemies = state[enemy_side]['units']
-    for s in enemies:
-        # if unit is killed by a previous overwatch reaction, other units should not react to it anymore
-        if moving_unit['hp'] > 0 and s['status'] == 'overwatch' and s.get('overwatch_ready') and s['weapon']['ammo']>0:
-            ux, uy = s['position']['x'], s['position']['y']
-            man = range_distance(state, ux, uy, step_x, step_y)
-            if 1 <= man <= s['weapon']['range']:
-                los_ok, _ ,pathStr  = los_clear_and_cover(state, ux, uy, step_x, step_y)
-                if los_ok:
-                    res = resolve_shot(state, s, moving_unit, step_x, step_y, reaction=True,dices=None,mode = None)
-                    add_log(state, f"OverwatchShooting -> {res}")
-                    s['overwatch_ready'] = False
-                    s['status'] = 'reacted'  # reset overwatch status after reaction shot
-                    s['acted'] = True  # mark as acted 
-                    if res == 'killed':
-                        return 'killed'
-                    if res == 'stopped':
-                        return 'stopped'
-                    
-    return 'continue'
 
 # Routes
 @app.route('/')
@@ -1050,8 +596,10 @@ def games():
             return redirect(url_for('index'))
         open_games, finished_games = list_games_by_type(game_type)
         name = next((t['name'] for t in GAME_TYPES if t['id']==game_type), game_type)
+        template_summary = get_template_summary(game_type)
         return render_template('games.html', game_type_id=game_type, game_type_name=name,
-                               open_games=open_games, finished_games=finished_games)
+                               open_games=open_games, finished_games=finished_games,
+                               template_summary=template_summary)
     else:
         game_type = request.form.get('type')
         name = request.form.get('name') or 'New Game'
@@ -1083,18 +631,7 @@ def api_type_terrain(type_id):
         tpl.setdefault('terrain',[]); tpl.setdefault('units',{'red':[],'blue':[]})
         tpl['units'].setdefault('red',[]); tpl['units'].setdefault('blue',[])
         # Ensure combatOptions is always present with safe defaults
-        co = tpl.setdefault('combatOptions', {})
-        co.setdefault('traverseFriendlyUnits', True)
-        co.setdefault('chargeTraverseFriendlyUnits', False)
-        co.setdefault('enterEnemyTile', False)
-        co.setdefault('stacking', False)  
-        co.setdefault('resolutionMethod', 'weapon_stats')
-        co.setdefault('savingThrowsMethod', 'no_saving')
-        co.setdefault('friendlyFire', False)
-        co.setdefault('terrainCoverBonus', True)
-        co.setdefault('moraleChecks', False)
-        co.setdefault('pinMoraleChecksAsFUBAR', False)
-        co.setdefault('routThreshold', 25)
+        tpl['combatOptions'] = normalize_combat_options(tpl.get('combatOptions'))
         return jsonify(tpl)
     data = request.get_json(force=True)
     TERR_TEMPLATES[type_id] = sanitize_editor_template(data)
@@ -1150,15 +687,7 @@ def api_play_card(game_id):
     st["turn_state"]["card_played"] = True
 
     # Helper targeting logic
-    def adjacent_enemy(unit):
-        ux, uy = unit["position"]["x"], unit["position"]["y"]
 
-        for dx,dy in neighbor_deltas(st, ux):
-            x, y = ux+dx, uy+dy
-            oside, enemy = unit_at(st, x, y)
-            if enemy and oside != side:
-                return enemy
-        return None
 
     def visible_enemies(unit):
         ux, uy = unit["position"]["x"], unit["position"]["y"]
@@ -1195,7 +724,7 @@ def api_play_card(game_id):
     elif card_id == "grenade":
         if not u or unitside != side:
             abort(400, "Select a unit first")
-        enemy = adjacent_enemy(u)
+        enemy = adjacent_enemy(st, u)
         if not enemy:
             abort(400, "No adjacent enemy to grenade")
         enemy["hp"] -= 1
@@ -1274,6 +803,8 @@ def api_action(game_id):
     data = request.get_json(force=True)
     action = data.get('action')
     dices = data.get('dices')
+    melee_resolution = data.get('melee_resolution')
+    add_log(st, f"ACTION API:{melee_resolution}")
     mode = data.get('mode', 'normal')
     combat_resolution = st.get('combat_resolution')
     add_log(st, f"Action requested: {action} with dices {dices}")   
@@ -1331,7 +862,7 @@ def api_action(game_id):
             abort(400, 'Select an adjacent enemy to attack')
         if not is_adjacent(st, u['position']['x'], u['position']['y'], tx, ty):
             abort(400, 'Attack requires adjacent enemy')
-        attack_result = resolve_attack(st, u, enemy, tx, ty)
+        attack_result = resolve_attack(st, u, enemy, tx, ty,action,melee_resolution)
         if attack_result['status'] == 'smoked':
             abort(400, 'Enemy is concealed by smoke')
         if attack_result['status'] == 'attacker_killed_by_reaction':
@@ -1416,7 +947,7 @@ def api_action(game_id):
         if not is_adjacent(st, px, py, tx, ty):
             abort(400, 'Charge: attacker is not adjacent to enemy after movement')
 
-        attack_result = resolve_attack(st, u, enemy, tx, ty)
+        attack_result = resolve_attack(st, u, enemy, tx, ty,action,melee_resolution)
         if attack_result['status'] == 'smoked':
             abort(400, 'Charge: enemy is concealed by smoke')
         if attack_result['status'] == 'attacker_killed_by_reaction':
