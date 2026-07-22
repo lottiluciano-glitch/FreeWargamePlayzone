@@ -2,11 +2,23 @@
 
 
 
-  const TILE_SIZE = 84;           // rendered tile height — change this one value to rescale
+  let TILE_SIZE = 96;             // rendered tile height — can now be changed live via the zoom control
+  const TILE_SIZE_DEFAULT = 96;
+  const TILE_SIZE_MIN = 48;
+  const TILE_SIZE_MAX = 224;
+  const TILE_SIZE_STEP = 16;
 
   const root = document.getElementById('battle-root');
   if(!root) return;
   const gameId = root.dataset.gameId;
+
+  // Restore the player's preferred tile size for this game, if any was saved.
+  try {
+    const savedTileSize = parseInt(localStorage.getItem(`battle-tile-size-${gameId}`), 10);
+    if (!isNaN(savedTileSize)) {
+      TILE_SIZE = Math.max(TILE_SIZE_MIN, Math.min(TILE_SIZE_MAX, savedTileSize));
+    }
+  } catch (e) { /* localStorage unavailable — ignore */ }
   const el = {
     turnInfo: document.getElementById('turn-info'),
     actions: document.getElementById('action-buttons'),
@@ -500,7 +512,10 @@
     const mapKey   = `${tileMode}-${cols}x${rows}`;
     const fallback = `/static/img/maps/plains-${tileMode}.png`;
     const mapImg   = `/static/img/maps/plains-${mapKey}.png`;
+
+    const UNIT_TILE_SIZE=TILE_SIZE -32; 
     el.bf.style.backgroundImage = `url("${mapImg}"), url("${fallback}")`;
+    el.bf.style.setProperty('--tile-size', `${UNIT_TILE_SIZE}px`);
     el.bf.style.setProperty('--bgwidth',  `${TILE_SIZE * cols + 16}px`);  // row slot (tile + border gap)
     if (tileMode === 'square') {
       el.bf.style.setProperty('--bgheight',  `${(TILE_SIZE + 0) * rows + 20 }px`);  // row slot (tile + border gap)
@@ -576,6 +591,107 @@
   }
 
 
+  /**
+   * Change the rendered tile size on the fly (zoom in/out) mid-battle.
+   * Rebuilds the battlefield grid at the new scale, keeps the current
+   * scroll position roughly centred on the same tile, redraws the minimap,
+   * and remembers the choice per-game in localStorage.
+   */
+  function setTileSize(px) {
+    const clamped = Math.max(TILE_SIZE_MIN, Math.min(TILE_SIZE_MAX, Math.round(px)));
+    if (clamped === TILE_SIZE) return;
+
+    // Remember what grid cell is centred in the viewport so the view doesn't jump.
+    let focusX = 0, focusY = 0;
+    const oldSize = TILE_SIZE;
+    if (el.bfViewport && oldSize) {
+      focusX = (el.bfViewport.scrollLeft + el.bfViewport.clientWidth / 2) / oldSize;
+      focusY = (el.bfViewport.scrollTop + el.bfViewport.clientHeight / 2) / oldSize;
+    }
+
+    TILE_SIZE = clamped;
+
+    try { localStorage.setItem(`battle-tile-size-${gameId}`, String(TILE_SIZE)); } catch (e) { /* ignore */ }
+
+    // Force a full battlefield rebuild at the new scale.
+    battlefieldInitialized = false;
+    render();
+
+    // Restore the viewport around the same grid cell at the new scale.
+    if (el.bfViewport) {
+      el.bfViewport.scrollLeft = Math.max(0, focusX * TILE_SIZE - el.bfViewport.clientWidth / 2);
+      el.bfViewport.scrollTop  = Math.max(0, focusY * TILE_SIZE - el.bfViewport.clientHeight / 2);
+    }
+
+    updateTileZoomControlLabel();
+  }
+
+  function updateTileZoomControlLabel() {
+    const label = document.getElementById('tile-zoom-label');
+    if (label) label.textContent = `${TILE_SIZE}px`;
+    const minusBtn = document.getElementById('tile-zoom-out');
+    const plusBtn  = document.getElementById('tile-zoom-in');
+    if (minusBtn) minusBtn.disabled = TILE_SIZE <= TILE_SIZE_MIN;
+    if (plusBtn)  plusBtn.disabled  = TILE_SIZE >= TILE_SIZE_MAX;
+  }
+
+  /**
+   * Injects a small zoom control (− / size / +/ reset) into the top actions
+   * bar so the player can rescale the battlefield at any point during play.
+   */
+  function injectTileZoomControl() {
+    if (document.getElementById('tile-zoom-controls')) {
+      updateTileZoomControlLabel();
+      return;
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.id = 'tile-zoom-controls';
+    wrapper.style.cssText = `
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: #94a3b8;
+      background: #111827; border: 1px solid #334155;
+      border-radius: 8px; padding: 4px 8px; user-select: none;
+    `;
+
+    const btnStyle = `
+      background: #1f2937; color: #e2e8f0; border: 1px solid #334155;
+      border-radius: 6px; width: 22px; height: 22px; line-height: 1;
+      cursor: pointer; font-size: 13px; font-weight: 700;
+    `;
+
+    const minusBtn = document.createElement('button');
+    minusBtn.id = 'tile-zoom-out';
+    minusBtn.type = 'button';
+    minusBtn.textContent = '−';
+    minusBtn.title = 'Zoom out';
+    minusBtn.style.cssText = btnStyle;
+    minusBtn.addEventListener('click', () => setTileSize(TILE_SIZE - TILE_SIZE_STEP));
+
+    const label = document.createElement('span');
+    label.id = 'tile-zoom-label';
+    label.textContent = `${TILE_SIZE}px`;
+    label.style.cssText = 'min-width: 42px; text-align: center; cursor: pointer;';
+    label.title = 'Reset zoom';
+    label.addEventListener('click', () => setTileSize(TILE_SIZE_DEFAULT));
+
+    const plusBtn = document.createElement('button');
+    plusBtn.id = 'tile-zoom-in';
+    plusBtn.type = 'button';
+    plusBtn.textContent = '+';
+    plusBtn.title = 'Zoom in';
+    plusBtn.style.cssText = btnStyle;
+    plusBtn.addEventListener('click', () => setTileSize(TILE_SIZE + TILE_SIZE_STEP));
+
+    wrapper.append('🔍 ', minusBtn, label, plusBtn);
+
+    const grp = document.querySelector('.actions-group');
+    if (grp) grp.appendChild(wrapper);
+
+    updateTileZoomControlLabel();
+  }
+
+
 
 function updateUnitsOnBattlefield() {
 
@@ -644,6 +760,7 @@ function updateUnitsOnBattlefield() {
       
       slot.className = stackingEnabled && count > 1 ? 'unit-stack-slot' : 'unit-no-stack';
       slot.dataset.unitId = u.id;
+      slot.title = u.name || u.type || 'Unit';
 
       
       // ── NEW: click on a stacked slot selects that specific unit ──
@@ -678,6 +795,8 @@ function updateUnitsOnBattlefield() {
 
       const img = document.createElement('img');
       img.className = 'unit-img';
+      img.alt = u.name || u.type || 'Unit';
+      img.title = u.name || u.type || 'Unit';
 
       const sprites = spriteForUnit(u);
       img.src = sprites.typeSprite || sprites.fallback;
@@ -1407,7 +1526,11 @@ function syncActedUnitsFromState() {
       background: #111827; border: 1px solid #334155;
       border-radius: 8px; padding: 6px 12px;
     `;
-   
+
+    if(state.battlefield.combatOptions.contemporaryMelee){
+      wrapper.appendChild(document.createTextNode('💥 Contemporary Melee Mode'));
+    }
+    
     if(state.battlefield.combatOptions.moraleChecks){
       if (state.battlefield.combatOptions.pinMoraleChecksAsFUBAR)
         wrapper.appendChild(document.createTextNode('😰✔️ Pin and Morale FUBAR Mode'));
@@ -1799,7 +1922,7 @@ function syncActedUnitsFromState() {
                 }
 
                 const result = await DiceRoller.roll(diceRequest);
-                await api('/action',{method:'POST', body: JSON.stringify({action: pendingAction, target: {x,y}, dices: result})}); 
+                await api('/action',{method:'POST', body: JSON.stringify({action: pendingAction, target: {x,y}, dices: result,melee_resolution: contemporaryMelee})}); 
                 pendingAction=null;
                 state = await api('/state');
                 await handleUnitActed();
@@ -1817,7 +1940,7 @@ function syncActedUnitsFromState() {
             const pathTarget = findChargeStopTile(x, y);
             if(!pathTarget) { alert('Cannot reach empty nearby tile to charge this enemy.'); return; }
             const result = await DiceRoller.roll("Att:D6 + Att:D6 + Bonus:D4 + Def:D6 + Def:D6 ");
-            await api('/action', {method:'POST', body: JSON.stringify({action:'charge', target:{x,y}, path_target: pathTarget, dices: result})});
+            await api('/action', {method:'POST', body: JSON.stringify({action:'charge', target:{x,y}, path_target: pathTarget, dices: result,melee_resolution: contemporaryMelee})});
             pendingAction=null;
             state = await api('/state');
             await handleUnitActed();
@@ -2176,6 +2299,7 @@ async function endPhase() {
   async function load(){
     state = await api('/state');
     injectAltActivationToggle();
+    injectTileZoomControl();
 
 
     if(!state.turn_state.begin_phase_executed){
@@ -2200,6 +2324,7 @@ async function endPhase() {
     savingThrowsMethod            = co.savingThrowsMethod || 'no_saving';
     moraleChecks                 = co.moraleChecks ?? false;
     pinMoraleChecksAsFUBAR        = co.pinMoraleChecksAsFUBAR ?? false;
+    contemporaryMelee              = co.contemporaryMelee ?? false;
 
 
     // Future options (e.g. co.resolutionMethod, co.friendlyFire, co.moraleChecks)

@@ -148,6 +148,7 @@
     resolutionMethod:      'weapon_stats',  // or 'standard'
     savingThrowsMethod:    'no_saving',
     friendlyFire:          false,
+    contemporaryMelee:     false, 
     terrainCoverBonus:     true,
     moraleChecks:          false,
     pinMoraleChecksAsFUBAR: false,
@@ -817,6 +818,7 @@
     setVal  ('cr-resolution-method',  combatOptions.resolutionMethod);
     setVal  ('cr-saving-throws-method', combatOptions.savingThrowsMethod);
     setCheck('cr-friendly-fire',      combatOptions.friendlyFire);
+    setCheck('cr-contemporary-melee', combatOptions.contemporaryMelee);
     setCheck('cr-terrain-cover-bonus', combatOptions.terrainCoverBonus);
     setCheck('cr-morale-checks',      combatOptions.moraleChecks);
     setCheck('cr-pin-morale-checks-as-FUBAR', combatOptions.pinMoraleChecksAsFUBAR);
@@ -851,6 +853,7 @@
     bindSelect('cr-resolution-method',  'resolutionMethod');
     bindSelect ('cr-saving-throws-method', 'savingThrowsMethod');
     bindCheck ('cr-friendly-fire',      'friendlyFire');
+    bindCheck ('cr-contemporary-melee', 'contemporaryMelee');
     bindCheck ('cr-terrain-cover-bonus','terrainCoverBonus');
     bindCheck ('cr-morale-checks',      'moraleChecks');
     bindCheck ('cr-pin-morale-checks-as-FUBAR', 'pinMoraleChecksAsFUBAR');
