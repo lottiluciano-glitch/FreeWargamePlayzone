@@ -84,6 +84,34 @@ function startScenario(id, sname) {
       <button type="submit">Create Game</button>
       <a class="btn secondary" href="/editor/type/{{ game_type_id }}">🗺️ Edit Type Template</a>
     </form>
+    <h3 style="margin-top: 0;">Current Template Settings</h3>
+    <div class="panel" style="margin-top: 1rem;">
+      
+      <p style="min-width: 300px;">
+        <strong>Era:</strong> {{ template_summary.era }} <br>
+        <strong>Map size:</strong> {{ template_summary.width }} x {{ template_summary.height }} <br>
+        <strong>Units:</strong> {{ template_summary.total_units }}
+        (Red: {{ template_summary.red_units }}, Blue: {{ template_summary.blue_units }})
+      </p>
+      
+      <ul class="list compact-list">
+        <h4 style="margin-bottom: .4rem;">Combat Options</h4>
+        {% for opt in template_summary.combat_options %}
+          <li>
+            <span style="min-width: 250px; display: inline-block;">{{ opt.label }}</span>
+            <strong>
+              {% if opt.value is sameas true %}
+                On
+              {% elif opt.value is sameas false %}
+                Off
+              {% else %}
+                {{ opt.value }}
+              {% endif %}
+            </strong>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   </section>
   <script>
     function deleteGame(id, name) {
@@ -99,6 +127,7 @@ function startScenario(id, sname) {
     .btn.danger:hover { background: #a93226; }
     .list li { display: flex; align-items: center; justify-content: space-between; }
     .li-actions { display: flex; gap: .25rem; margin-left: auto; }
+    .compact-list li { padding: .2rem 0; }
   </style>
 
   <script>
