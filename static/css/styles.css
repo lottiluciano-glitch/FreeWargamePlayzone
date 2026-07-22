@@ -157,12 +157,12 @@ button.team.active{background:#22c55e;color:#052e16}
 /* === Unit sprite in tiles === */
 .tile .unit-img {
   position: absolute;
-  inset: 6px;                 /* keep a little padding inside the 64×64 tile */
+  inset: 6px;                 /* keep a little padding inside the tile */
   object-fit: contain;
   width: calc(100% - 12px);
   height: calc(100% - 12px);
-  max-width: 64px;
-  max-height: 64px;
+  max-width: var(--tile-size, 128px);
+  max-height: var(--tile-size, 128px);
 
   /* pointer-events: none; */
   filter: drop-shadow(0 1px 1px rgba(0,0,0,.6));
