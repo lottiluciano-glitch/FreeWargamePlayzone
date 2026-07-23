@@ -313,11 +313,19 @@
     qstreet_n_e: '/static/img/terrain/qstreet-n-e.png',
     qstreet_n_w: '/static/img/terrain/qstreet-n-w.png',
     qstreet_s_e: '/static/img/terrain/qstreet-s-e.png',
-    qstreet_s_w: '/static/img/terrain/qstreet-s-w.png'
+    qstreet_s_w: '/static/img/terrain/qstreet-s-w.png',
+    hriver_nw_n_ne: '/static/img/terrain/hriver-nw-n-ne.png',
+    hriver_n_ne: '/static/img/terrain/hriver-n-ne.png',
+    hriver_ne_se: '/static/img/terrain/hriver-ne-se.png'
   };
 
   function terrainImgSrc(type) {
     return TERRAIN_SPRITES[type] || TERRAIN_SPRITES['open'];
+  }
+
+  function terrainLayers(type) {
+    if (!type || type === 'open') return ['open'];
+    return type.split('|').map(layer => layer.trim()).filter(Boolean);
   }
 
 
@@ -582,17 +590,20 @@
 
         // Terrain class (keeps CSS colour fallback while image loads)
         const terr = terrainAt(x, y);
-        if (terr !== 'open') t.classList.add(`t-${terr}`);
-
-        // ── Terrain image (layer 0) ──────────────────────────────────────────
-        const terrImg = document.createElement('img');
-        terrImg.className = 'terrain-img';
-        terrImg.src = terrainImgSrc(terr);
-        terrImg.alt = '';
-        terrImg.draggable = false;
-        // If the PNG is missing, hide the element so the CSS colour shows through
-        terrImg.onerror = () => { terrImg.style.display = 'none'; };
-        t.appendChild(terrImg);           // inserted FIRST → z-index 0
+        const terrLayers = terrainLayers(terr);
+        terrLayers.filter(layer => layer !== 'open').forEach(layer => t.classList.add(`t-${layer}`));
+        // ── Terrain image layers (layer 0 base + overlays above it) ─────────────────
+        terrLayers.forEach((layer, index) => {
+          const terrImg = document.createElement('img');
+ 
+          terrImg.className = index === 0 ? 'terrain-img' : 'terrain-img terrain-overlay';
+          terrImg.src = terrainImgSrc(layer);
+          terrImg.alt = '';
+          terrImg.draggable = false;
+          // If the PNG is missing, hide the element so the CSS colour shows through
+          terrImg.onerror = () => { terrImg.style.display = 'none'; };
+          t.appendChild(terrImg);
+        });
 
         // ── HP badge (layer 3) ───────────────────────────────────────────────
         const hp = document.createElement('div');
@@ -605,7 +616,7 @@
 
         tileCache.set(tileKey(x, y), {
           tile: t,
-          terrImg,   // keep ref so we can swap on terrain edits if needed
+          terrLayers,   // keep ref so we can swap on terrain edits if needed
           img: null,
           hp
         });
@@ -1007,6 +1018,20 @@ function syncActedUnitsFromState() {
     return 'open';
   }
 
+  function terrainLayers(type){
+    if (!type || type === 'open') return ['open'];
+    return type.split('|').map(layer => layer.trim()).filter(Boolean);
+  }
+
+  function terrainAtLayers(x, y) {
+    return terrainLayers(terrainAt(x, y));
+  }
+
+  function terrainHasLayer(x, y, ...layers) {
+    const tile = new Set(terrainAtLayers(x, y));
+    return layers.some(layer => tile.has(layer));
+  }
+
   function unitAt(x,y){
     return [...state.red.units, ...state.blue.units].find(u => u.position.x===x && u.position.y===y);
   }
@@ -1015,22 +1040,53 @@ function syncActedUnitsFromState() {
     return x>=0 && y>=0 && x<state.battlefield.width && y<state.battlefield.height;
   }
 
-  function neighborOffsets(x, tileMode = (state.battlefield.tileMode || 'square')) {
+  function neighborOffsets(x, y, tileMode = (state.battlefield.tileMode || 'square')) {
+
+    const terrain = terrainAt(x,y);
+    let fullSet = [];
     if (tileMode === 'square') return [[0,1],[0,-1],[-1,0],[1,0]];
-    return (x % 2 === 0)
-      ? [[0,1],[0,-1],[-1,0],[-1,-1],[1,0],[1,-1]]
-      : [[0,1],[0,-1],[-1,0],[-1,1],[1,0],[1,1]];
+
+    if (x % 2 === 0) {
+
+      const southTerrain = terrainAt(x, y+1);
+      const southEastTerrain = terrainAt(x+1, y);
+      const southWestTerrain = terrainAt(x-1, y);
+      const northWestTerrain = terrainAt(x-1, y-1);
+
+      if (!terrain.includes('hriver_nw_n_ne') &&  !terrain.includes('hriver_n_ne')) fullSet.push([0,-1]);//North
+      if (!terrain.includes('hriver_nw_n_ne') &&  !terrain.includes('hriver_n_ne') &&  !terrain.includes('hriver_ne_se')) fullSet.push([1,-1]);//NorthEast
+      if (!southEastTerrain.includes('hriver_nw_n_ne') &&  !terrain.includes('hriver_ne_se'))fullSet.push([1,0]);//SouthEast
+      if (!southTerrain.includes('hriver_nw_n_ne') && !southTerrain.includes('hriver_n_ne'))fullSet.push([0,1]);//South
+      if (!southWestTerrain.includes('hriver_nw_n_ne') &&  !southWestTerrain.includes('hriver_n_ne') &&  !southWestTerrain.includes('hriver_ne_se'))fullSet.push([-1,0]);//SouthWest
+      if (!terrain.includes('hriver_nw_n_ne') && !northWestTerrain.includes('hriver_ne_se'))fullSet.push([-1,-1]);//NorthWest
+
+
+    } else {
+      const southTerrain = terrainAt(x, y+1);
+      const southEastTerrain = terrainAt(x+1, y+1);
+      const southWestTerrain = terrainAt(x-1, y+1);
+      const northWestTerrain = terrainAt(x-1, y);
+
+      if (!terrain.includes('hriver_nw_n_ne') &&  !terrain.includes('hriver_n_ne'))fullSet.push([0,-1]);//North
+      if (!terrain.includes('hriver_nw_n_ne') &&  !terrain.includes('hriver_n_ne') &&  !terrain.includes('hriver_ne_se'))fullSet.push([1,0]);//NorthEast
+      if (!southEastTerrain.includes('hriver_nw_n_ne')  && !terrain.includes('hriver_ne_se'))fullSet.push([1,1]);//SouthEast
+      if (!southTerrain.includes('hriver_nw_n_ne') && !southTerrain.includes('hriver_n_ne'))fullSet.push([0,1]);//South
+      if (!southWestTerrain.includes('hriver_nw_n_ne') && !southWestTerrain.includes('hriver_n_ne') && !southWestTerrain.includes('hriver_ne_se'))fullSet.push([-1,1]);//SouthWest
+      if (!terrain.includes('hriver_nw_n_ne') && !northWestTerrain.includes('hriver_n_ne'))fullSet.push([-1,0]);//NorthWest
+    }
+
+    return fullSet;
   }
 
   function isAdjacent(x1, y1, x2, y2){
-    return neighborOffsets(x1).some(([dx,dy]) => x1 + dx === x2 && y1 + dy === y2);
+    return neighborOffsets(x1, y1).some(([dx,dy]) => x1 + dx === x2 && y1 + dy === y2);
   }
 
   function isPassableForUnit(unit, x, y){
     if(!inBounds(x,y)) return false;
-    const tt = terrainAt(x,y);
-    if(unit.impassable && unit.impassable.includes(tt)) return false;
-    if(tt === 'rocks') return false;
+    const ttLayers = terrainAtLayers(x, y);
+    if(unit.impassable && ttLayers.some(layer => unit.impassable.includes(layer))) return false;
+    if(ttLayers.includes('rocks')) return false;
     return true;
   }
 
@@ -1041,7 +1097,10 @@ function syncActedUnitsFromState() {
     // Rocks and water are impassable  , other terrains have different costs 
 
     // Check if terrain is declared impassable for this specific unit 
-    if(unit.impassable && unit.impassable.includes(terrainAt(x,y))) return 9999;
+    const ttLayers = terrainAtLayers(x, y);
+    if(unit.impassable && ttLayers.some(layer => unit.impassable.includes(layer))) return 9999;
+    if(ttLayers.includes('rocks') || ttLayers.includes('water')) return 9999;
+    if(ttLayers.some(layer => ['hstreet_so_ne', 'hstreet_so_n', 'hstreet_s_no', 'hstreet_s_ne', 'hstreet_se_no', 'hstreet_se_n', 'hstreet_s_n', 'qstreet_e_w', 'qstreet_e_n_w', 'qstreet_n_e_s', 'qstreet_n_w_s', 'qstreet_w_s_e', 'qstreet_n_e', 'qstreet_n_w', 'qstreet_s_e', 'qstreet_s_w'].includes(layer))) return 0.5;
 
     switch (terrainAt(x,y)) {
       case 'rough':
@@ -1072,6 +1131,10 @@ function syncActedUnitsFromState() {
       case 'rocks':
         return 9999;
       default:
+        if (ttLayers.some(layer => ['rough', 'forest', 'wall', 'highground'].includes(layer))) {
+          if(actionType === 'move' && unit.speed === 1) return 1;
+          return 2;
+        }
         return 1;
     }
   }
@@ -1094,7 +1157,7 @@ function syncActedUnitsFromState() {
       pq.sort((a,b)=>a[0]-b[0]);
       const [cost,x,y] = pq.shift(); if(seen.has(tileId(x,y))) continue; seen.add(tileId(x,y));
 
-      for(const [dx,dy] of neighborOffsets(x)){
+      for(const [dx,dy] of neighborOffsets(x,y)){
         const nx=x+dx, ny=y+dy;
         if(!isPassableForUnit(u, nx, ny)) continue;
         //LL STACK: just disabling reachable here should block any stacking possibility 
@@ -1243,8 +1306,7 @@ function syncActedUnitsFromState() {
               return false; // blocked by any unit (except self)
             }
           }
-          const tt = terrainAt(x, y);
-          if (tt === 'wall' || tt === 'forest' || tt === 'highground' || tt === 'rocks') {
+          if (terrainHasLayer(x, y, 'wall', 'forest', 'highground', 'rocks')) {
             //el.errorMessage.innerHTML = el.errorMessage.innerHTML + `B:(${x},${y}). `;
             return false;
           }
@@ -1294,8 +1356,7 @@ function syncActedUnitsFromState() {
           }
         }
 
-        const tt = terrainAt(tx, ty);
-        if (tt === 'wall' || tt === 'forest' || tt === 'highground' || tt === 'rocks'){
+        if (terrainHasLayer(tx, ty, 'wall', 'forest', 'highground', 'rocks')){
             el.errorMessage.innerHTML = el.errorMessage.innerHTML + `B:(${tx},${ty}). `;
             return false;
         } 
@@ -1348,7 +1409,7 @@ function syncActedUnitsFromState() {
       while(pq.length){
         pq.sort((a,b)=>a[0]-b[0]);
         const [cost,x,y] = pq.shift(); if(seen.has(tileId(x,y))) continue; seen.add(tileId(x,y));
-        for(const [dx,dy] of neighborOffsets(x, tileMode)){
+        for(const [dx,dy] of neighborOffsets(x,y, tileMode)){
           const nx=x+dx, ny=y+dy;
           if(!isPassableForUnit(me, nx, ny)) continue;
 
@@ -1392,7 +1453,7 @@ function syncActedUnitsFromState() {
       
 
       // Otherwise check if any adjacent-to-enemy tile is in runReachable and not occupied by another unit
-      for(const [dx,dy] of neighborOffsets(ex, tileMode)){
+      for(const [dx,dy] of neighborOffsets(ex, ey, tileMode)){
         const nx=ex+dx, ny=ey+dy; if(!inBounds(nx,ny)) continue;
         if(!isPassableForUnit(me, nx, ny)) continue;
         const occupant = unitAt(nx,ny);
@@ -1430,7 +1491,7 @@ function syncActedUnitsFromState() {
     //set the reference of validChange for the target tile mode
 
 
-    for(const [dx,dy] of neighborOffsets(tx, tileMode)){ 
+    for(const [dx,dy] of neighborOffsets(tx, ty, tileMode)){
       const nx=tx+dx, ny=ty+dy; if(!inBounds(nx,ny)) continue;
       if(!isPassableForUnit(me, nx, ny)) continue;
       const occupant = unitAt(nx,ny);
@@ -1448,7 +1509,7 @@ function syncActedUnitsFromState() {
           if(cost <= runRange && cost < bestCost){ bestCost=cost; best={x:nx,y:ny}; }
           found=true; break;
         }
-        for(const [ddx,ddy] of neighborOffsets(cx, tileMode)){
+        for(const [ddx,ddy] of neighborOffsets(cx, cy, tileMode)){
           const nnx=cx+ddx, nny=cy+ddy; if(!inBounds(nnx,nny)) continue;
           if(!isPassableForUnit(me, nnx, nny)) continue;
           const occ2 = unitAt(nnx,nny);

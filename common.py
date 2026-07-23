@@ -1,7 +1,9 @@
 import random
 import math
 
-TERRAIN_TYPES = ['open','wall','rocks','rough','cover','water','forest','highground','hstreet_so_ne','hstreet_so_n','hstreet_s_no','hstreet_s_ne','hstreet_se_no','hstreet_se_n','hstreet_s_n', 'qstreet_e_w', 'qstreet_e_n_w', 'qstreet_n_e_s', 'qstreet_n_w_s', 'qstreet_w_s_e', 'qstreet_n_e', 'qstreet_n_w', 'qstreet_s_e', 'qstreet_s_w']
+TERRAIN_TYPES = ['open','wall','rocks','rough','cover','water','forest','highground',
+                 'hstreet_so_ne','hstreet_so_n','hstreet_s_no','hstreet_s_ne','hstreet_se_no','hstreet_se_n','hstreet_s_n', 'qstreet_e_w', 'qstreet_e_n_w', 'qstreet_n_e_s', 'qstreet_n_w_s', 'qstreet_w_s_e', 'qstreet_n_e', 'qstreet_n_w', 'qstreet_s_e', 'qstreet_s_w',
+                 'hriver_nw_n_ne', 'hriver_n_ne','hriver_ne_se'] 
 
 TERRAIN_COST = {
     'open': 1,
@@ -27,7 +29,10 @@ TERRAIN_COST = {
     'qstreet_n_e': 0.5,
     'qstreet_n_w': 0.5,
     'qstreet_s_e': 0.5,
-    'qstreet_s_w': 0.5
+    'qstreet_s_w': 0.5,
+    'hriver_nw_n_ne': 0,
+    'hriver_n_ne': 0,
+    'hriver_ne_se': 0
 }
 
 
@@ -65,6 +70,18 @@ def terrain_map(state):
 def tile_type(state, x, y):
     return terrain_map(state).get((x,y),'open')
 
+
+def tile_layers(state, x, y):
+    ttype = tile_type(state, x, y)
+    if not isinstance(ttype, str) or ttype == 'open':
+        return ['open']
+    return [layer.strip() for layer in ttype.split('|') if layer and layer.strip()]
+
+
+def terrain_has_layer(state, x, y, *layers):
+    tile = set(tile_layers(state, x, y))
+    return any(layer in tile for layer in layers)
+
 #remember this is duplicated in battle.js as well, so any changes here should be reflected there for consistency between frontend and backend logic
 def tile_cost(unit_ref, action, state, x, y):
     unit = None
@@ -74,14 +91,15 @@ def tile_cost(unit_ref, action, state, x, y):
         _, unit = find_unit(state, unit_ref)
 
     ttype = tile_type(state, x, y)
+    layers = tile_layers(state, x, y)
     if action in ('move', 'run', 'charge'):
-        if unit and ttype in unit.get('impassable', []):
+        if unit and any(layer in unit.get('impassable', []) for layer in layers):
             return 9999  # Impassable due to unit restriction
-        if ttype in ('rocks', 'water'):
+        if any(layer in ('rocks', 'water') for layer in layers):
             return 9999  # Impassable
-        if ttype in ('hstreet_so_ne', 'hstreet_so_n', 'hstreet_s_no', 'hstreet_s_ne', 'hstreet_se_no', 'hstreet_se_n', 'hstreet_s_n', 'qstreet_e_w', 'qstreet_e_n_w', 'qstreet_n_e_s', 'qstreet_n_w_s', 'qstreet_w_s_e', 'qstreet_n_e', 'qstreet_n_w', 'qstreet_s_e', 'qstreet_s_w'):
+        if any(layer in ('hstreet_so_ne', 'hstreet_so_n', 'hstreet_s_no', 'hstreet_s_ne', 'hstreet_se_no', 'hstreet_se_n', 'hstreet_s_n', 'qstreet_e_w', 'qstreet_e_n_w', 'qstreet_n_e_s', 'qstreet_n_w_s', 'qstreet_w_s_e', 'qstreet_n_e', 'qstreet_n_w', 'qstreet_s_e', 'qstreet_s_w') for layer in layers):
             return 0.5  # Reduced cost for streets
-        if ttype in ( 'rough','wall','forest','highground'):
+        if any(layer in ('rough', 'wall', 'forest', 'highground') for layer in layers):
             if action == 'move' and unit and unit.get('speed') == 1:
                 return 1  # Allow normal cost for slow units moving into difficult terrain
             return 2  # Increased cost for cover and rough terrain
@@ -171,11 +189,11 @@ def los_clear_and_cover(state, x1, y1, x2, y2):
             if not in_bounds(state, x, y):
                 return False, 0,pathStr
             tt = tile_type(state, x, y)
-            if tt in ('wall', 'forest', 'highground', 'rocks'):
+            if terrain_has_layer(state, x, y, 'wall', 'forest', 'highground', 'rocks'):
                 return False, 0 ,pathStr
             if (x, y) in occupied:
                 return False, 0, pathStr
-            if tt == 'cover':
+            if 'cover' in tile_layers(state, x, y):
                 cover_tiles += 1
         return True, cover_tiles,pathStr
     else:
@@ -202,11 +220,11 @@ def los_clear_and_cover(state, x1, y1, x2, y2):
         cover_tiles = 0
         for tx, ty in tiles_passed:
             tt = tile_type(state, tx, ty)
-            if tt in ('wall', 'forest', 'highground', 'rocks'):
+            if terrain_has_layer(state, tx, ty, 'wall', 'forest', 'highground', 'rocks'):
                 return False, 0,""
             if (tx, ty) in occupied:
                 return False, 0,""
-            if tt == 'cover':
+            if 'cover' in tile_layers(state, tx, ty):
                 cover_tiles += 1
         return True, cover_tiles ,""
 

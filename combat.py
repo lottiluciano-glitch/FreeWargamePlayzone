@@ -258,7 +258,6 @@ def resolve_attack(state, attacker, target, at_x, at_y,action,melee_resolution, 
     # melee attack with shooting weapon suffers accuracy malus but can still hit with low damage  
     if weapon.get('range', 1) > 1:
         malus=True
-        dmg = 1
     else:
         malus=False
 
@@ -279,19 +278,18 @@ def resolve_attack(state, attacker, target, at_x, at_y,action,melee_resolution, 
 
                     if malus:
                         dmg = max(1, round(dmg / 2))  # apply malus to damage
-                    damage = dmg
                     effective_shields = target.get('shields', 0) + cover_bonus
                     if effective_shields > 0:
-                        used = min(effective_shields, damage)
+                        used = min(effective_shields, dmg)
                         persist = target.get('shields', 0)
                         if persist >= used:
-                            target['shields'] = persist - used
+                            target['shields'] = max(persist - used, 0)
                         else:
                             target['shields'] = 0
-                        damage -= used
-                    if damage > 0:
-                        target['hp'] -= damage
-                        add_log(state, f"{attacker['name']} Figure {f+1} Attack {a+1}:  hits {target['name']} for {damage} damage!")
+                        dmg -= used
+                    if dmg > 0:
+                        target['hp'] -= dmg
+                        add_log(state, f"{attacker['name']} Figure {f+1} Attack {a+1}:  hits {target['name']} for {dmg} damage!")
 
                     if target['hp'] <= 0:
                         if target['n_of_figures'] > 1:
@@ -302,7 +300,7 @@ def resolve_attack(state, attacker, target, at_x, at_y,action,melee_resolution, 
                             side_t = target['team']
                             state[side_t]['units'] = [x for x in state[side_t]['units'] if x['id'] != target['id']]
                             check_victory(state)
-                            return {'status': 'killed', 'damage': damage, 'cover_bonus': cover_bonus}
+                            return {'status': 'killed', 'damage': dmg, 'cover_bonus': cover_bonus}
                 else:
                     add_log(state, f"Damage roll {diceToDamage} < {toDamage} [{target['experience']}], so no damage applies!")        
             else:
@@ -323,7 +321,6 @@ def resolve_attack(state, attacker, target, at_x, at_y,action,melee_resolution, 
             melee_resolution,
             allow_reaction=False,
         )
-        defenderHasReacted=True
         add_log(state, f"Defender Melee -> {reaction_result.get('status')}")
         if reaction_result.get('status') == 'killed':
             return {'status': 'attacker_killed_in_melee', 'damage': 0, 'cover_bonus': 0}        
@@ -332,7 +329,7 @@ def resolve_attack(state, attacker, target, at_x, at_y,action,melee_resolution, 
             return {'status': 'missed', 'damage': 0, 'cover_bonus': 0}
     else:
             target['stress'] = target.get('stress', 0) + 1  # increase stress on hit
-            return {'status': 'hit', 'damage': damage, 'cover_bonus': cover_bonus}
+            return {'status': 'hit', 'damage': dmg, 'cover_bonus': cover_bonus}
 
 
 def trigger_overwatch_reactions(state, moving_unit, step_x, step_y):

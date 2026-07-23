@@ -128,10 +128,18 @@
     qstreet_n_e: '/static/img/terrain/qstreet-n-e.png',
     qstreet_n_w: '/static/img/terrain/qstreet-n-w.png',
     qstreet_s_e: '/static/img/terrain/qstreet-s-e.png',
-    qstreet_s_w: '/static/img/terrain/qstreet-s-w.png'
+    qstreet_s_w: '/static/img/terrain/qstreet-s-w.png',
+    hriver_nw_n_ne: '/static/img/terrain/hriver-nw-n-ne.png',
+    hriver_n_ne: '/static/img/terrain/hriver-n-ne.png',
+    hriver_ne_se: '/static/img/terrain/hriver-ne-se.png'
 
   };
   function terrainImgSrc(type) { return TERRAIN_SPRITES[type] || TERRAIN_SPRITES['open']; }
+
+  function terrainLayers(type) {
+    if (!type || type === 'open') return ['open'];
+    return type.split('|').map(layer => layer.trim()).filter(Boolean);
+  }
 
   let terrain = [];
   let width = 10, height = 10;
@@ -311,7 +319,20 @@
     if(type==='open'){ 
       if(idx>=0) terrain.splice(idx,1); 
     } else { 
-      if(idx>=0) terrain[idx].type=type; else terrain.push({x,y,type}); 
+      if(idx>=0){
+        if (type.includes('river')) {
+          
+          terrain[idx].type = terrain[idx].type + '|' + type; // append river type to existing terrain
+        } else {
+          terrain[idx].type = type;
+        } 
+      }else {
+         if (type.includes('river')) {
+          terrain.push({x,y,type: 'open|' + type}); // create new terrain with river type
+        } else {
+         terrain.push({x,y,type}); 
+        }
+      }
     } 
   }
 
@@ -324,7 +345,7 @@
   }
 
   function toggleUnit(x,y){
-    if(['wall','rocks'].includes(terrainAt(x,y))) return; // no units on walls or rocks
+    if(terrainLayers(terrainAt(x, y)).some(layer => ['wall', 'rocks'].includes(layer))) return; // no units on walls or rocks
     const existing = unitAt(x,y);
     if(existing){ // remove existing
       units[existing.team].splice(existing.idx,1);
@@ -694,19 +715,22 @@
         }
 
         const tt = terrainAt(x, y);
-        if (tt && tt !== 'open') t.classList.add('t-' + tt);
+        const ttLayers = terrainLayers(tt);
+        ttLayers.filter(layer => layer !== 'open').forEach(layer => t.classList.add('t-' + layer));
         t.dataset.x = x;
         t.dataset.y = y;
-        t.title = `(${x},${y})\n${tt.toUpperCase()}`;
+        t.title = `(${x},${y})\n${ttLayers.map(layer => layer.toUpperCase()).join(' + ')}`;
 
-        // ── Terrain image (bottom layer) ─────────────────────────────────────────────
-        const terrImg = document.createElement('img');
-        terrImg.className = 'terrain-img';
-        terrImg.src = terrainImgSrc(tt);
-        terrImg.alt = '';
-        terrImg.draggable = false;
-        terrImg.onerror = () => { terrImg.style.display = 'none'; };
-        t.appendChild(terrImg);   // first child → rendered below everything else
+        // ── Terrain image layers (bottom first, overlays after) ─────────────────────
+        ttLayers.forEach((layer, index) => {
+          const terrImg = document.createElement('img');
+          terrImg.className = index === 0 ? 'terrain-img' : 'terrain-img terrain-overlay';
+          terrImg.src = terrainImgSrc(layer);
+          terrImg.alt = '';
+          terrImg.draggable = false;
+          terrImg.onerror = () => { terrImg.style.display = 'none'; };
+          t.appendChild(terrImg);
+        });
 
         // ── Unit image (top layer) ────────────────────────────────────────────────────
         const ref = unitAt(x, y);

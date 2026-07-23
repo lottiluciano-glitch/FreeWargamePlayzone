@@ -140,7 +140,7 @@ button.team.active{background:#22c55e;color:#052e16}
 /*.tile.blue{outline:2px solid var(--blue)}*/
 .tile.sel{box-shadow:0 0 0 6px #22c55e inset;z-index: 6}
 .tile.smoke{box-shadow:0 0 0 2px #b7bbb9 inset}
-.tile .hp{font-size:12px;color:#fef3c7;position:absolute;bottom:20%;left:25%}
+.tile .hp{font-size:10px;color:#fef3c7;position:absolute;bottom:20%;left:25%}
 
 
 

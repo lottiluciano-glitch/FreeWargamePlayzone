@@ -344,11 +344,21 @@ def sanitize_editor_template(data):
     # only explicitly declared options are ever persisted.
     combat_options = normalize_combat_options(data.get('combatOptions'))
 
+    def normalize_terrain_type(raw_type):
+        if not isinstance(raw_type, str):
+            return None
+        layers = [layer.strip() for layer in raw_type.split('|') if layer and layer.strip()]
+        if not layers:
+            return None
+        if any(layer not in TERRAIN_TYPES for layer in layers):
+            return None
+        return '|'.join(layers)
+
     clean_terr = []
     for t in terr:
         x, y = int(t.get('x', -1)), int(t.get('y', -1))
-        ty = t.get('type', 'open')
-        if 0 <= x < width and 0 <= y < height and ty in TERRAIN_TYPES:
+        ty = normalize_terrain_type(t.get('type', 'open'))
+        if 0 <= x < width and 0 <= y < height and ty:
             clean_terr.append({'x': x, 'y': y, 'type': ty})
 
     occ = set()
@@ -358,7 +368,7 @@ def sanitize_editor_template(data):
     def is_blocking_tile(px, py):
         for tt in clean_terr:
             if tt['x'] == px and tt['y'] == py:
-                return tt['type'] in ('wall', 'rocks')
+                return any(layer in ('wall', 'rocks') for layer in tt['type'].split('|'))
         return False
 
     for color in ['red', 'blue']:
