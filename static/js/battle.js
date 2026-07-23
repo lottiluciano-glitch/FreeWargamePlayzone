@@ -514,136 +514,6 @@
     }
   }
 
- 
-  function XdrawMinimap() {
-    if (!el.minimap || !state) return;
-    const ctx = el.minimap.getContext('2d');
-    if (!ctx) return;
-
-    const cols = state.battlefield.width;
-    const rows = state.battlefield.height;
-    const isHex = state.battlefield.tileMode !== 'square';
-    const w = el.minimap.width;
-    const h = el.minimap.height;
-
-    // Minimap "scale" below is the hex's own point-to-point width in minimap pixels;
-    // colStep/rowStep/rowOffset mirror hexGeometry() but in minimap-scale units.
-    const logicalCols = isHex ? (cols - 1) * 0.75 + 1 : cols;
-    const logicalRows = isHex ? rows * (Math.sqrt(3) / 2) + 0.5 * (Math.sqrt(3) / 2) : rows;
-    const scale = Math.max(1, Math.min((w - 8) / logicalCols, (h - 8) / logicalRows));
-    const colStep = isHex ? scale * 0.75 : scale;
-    const rowStep = isHex ? scale * Math.sqrt(3) / 2 : scale;
-    const rowOffset = isHex ? rowStep / 2 : 0;
-
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = '#3f172a07';
-    ctx.fillRect(0, 0, w, h);
-
-    const mapW = (cols - 1) * colStep + scale;
-    const mapH = (rows - 1) * rowStep + rowStep + rowOffset;
-    const offsetX = Math.floor((w - mapW) / 2);
-    const offsetY = Math.floor((h - mapH) / 2);
-
-    minimapMeta = { cols, rows, scale, colStep, rowStep, rowOffset, isHex, mapW, mapH, offsetX, offsetY };
-
-    function cellTopLeft(x, y) {
-      const cx = offsetX + x * colStep;
-      const cy = offsetY + y * rowStep + (isHex && x % 2 === 1 ? rowOffset : 0);
-      return [cx, cy];
-    }
-
-    const terrMap = new Map();
-    (state.battlefield.terrain || []).forEach(t => terrMap.set(tileKey(t.x, t.y), t.type));
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        const terr = terrMap.get(tileKey(x, y)) || 'open';
-        ctx.fillStyle = MINIMAP_TERRAIN_COLORS[terr] || MINIMAP_TERRAIN_COLORS.open;
-        const [cx, cy] = cellTopLeft(x, y);
-        ctx.fillRect(cx, cy, scale, isHex ? rowStep : scale);
-      }
-    }
-
-    const allUnits = [...state.red.units, ...state.blue.units];
-    allUnits.forEach(u => {
-      const [cx, cy] = cellTopLeft(u.position.x, u.position.y);
-      const ux = cx + scale / 2;
-      const uy = cy + (isHex ? rowStep : scale) / 2;
-      const r = Math.max(2, scale * 0.35);
-
-      ctx.beginPath();
-      ctx.arc(ux, uy, r, 0, Math.PI * 2);
-      ctx.fillStyle = u.team === 'red' ? '#ef4444' : '#60a5fa';
-      ctx.fill();
-    });
-
-    if (state.selected_unit_id) {
-      const selected = allUnits.find(u => u.id === state.selected_unit_id);
-      if (selected) {
-        const [sx, sy] = cellTopLeft(selected.position.x, selected.position.y);
-        ctx.strokeStyle = '#22c55e';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(sx, sy, scale, isHex ? rowStep : scale);
-      }
-    }
-
-    ctx.strokeStyle = '#64748b';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(offsetX - 0.5, offsetY - 0.5, mapW + 1, mapH + 1);
-  }
-
-  function XupdateMinimapViewportBox() {
-    if (!el.bfViewport || !el.minimapViewport || !minimapMeta) return;
-
-    const contentW = el.bf.scrollWidth;
-    const contentH = el.bf.scrollHeight;
-    if (!contentW || !contentH) return;
-
-    const visibleW = el.bfViewport.clientWidth;
-    const visibleH = el.bfViewport.clientHeight;
-    const scrollLeft = el.bfViewport.scrollLeft;
-    const scrollTop = el.bfViewport.scrollTop;
-
-    const vwRaw = (visibleW / contentW) * minimapMeta.mapW;
-    const vhRaw = (visibleH / contentH) * minimapMeta.mapH;
-    const vw = Math.min(minimapMeta.mapW, Math.max(10, vwRaw));
-    const vh = Math.min(minimapMeta.mapH, Math.max(10, vhRaw));
-    const vxRaw = minimapMeta.offsetX + (scrollLeft / contentW) * minimapMeta.mapW;
-    const vyRaw = minimapMeta.offsetY + (scrollTop / contentH) * minimapMeta.mapH;
-    const vx = Math.min(minimapMeta.offsetX + minimapMeta.mapW - vw, Math.max(minimapMeta.offsetX, vxRaw));
-    const vy = Math.min(minimapMeta.offsetY + minimapMeta.mapH - vh, Math.max(minimapMeta.offsetY, vyRaw));
-
-    el.minimapViewport.style.left = `${vx}px`;
-    el.minimapViewport.style.top = `${vy}px`;
-    el.minimapViewport.style.width = `${vw}px`;
-    el.minimapViewport.style.height = `${vh}px`;
-
-    if (el.minimapCoords) {
-      const centerX = Math.floor((scrollLeft + visibleW / 2) / TILE_SIZE);
-      const centerY = Math.floor((scrollTop + visibleH / 2) / TILE_SIZE);
-      el.minimapCoords.textContent = `(${centerX},${centerY})`;
-    }
-
-    // ── Auto-reposition minimap based on scroll position ─────────────────────
-    const maxScrollLeft = el.bfViewport.scrollWidth - el.bfViewport.clientWidth;
-    const minimapPanel = el.minimapWrap && el.minimapWrap.closest('.battle-minimap-panel');
-    if (minimapPanel && maxScrollLeft > 0) {
-      const atRight = scrollLeft >= maxScrollLeft - 2;
-      const atLeft  = scrollLeft <= 2;
-
-      if (atRight && minimapPosition === 'right') {
-        // Fully scrolled right — move minimap to top-left
-        minimapPanel.style.right = '';
-        minimapPanel.style.left  = '12px';
-        minimapPosition = 'left';
-      } else if (atLeft && minimapPosition === 'left') {
-        // Fully scrolled left while minimap is top-left — move it back to top-right
-        minimapPanel.style.left  = '';
-        minimapPanel.style.right = '12px';
-        minimapPosition = 'right';
-      }
-    }
-  }
-
 
 
   function initBattlefield() {
@@ -1007,12 +877,12 @@ function updateUnitsOnBattlefield() {
     // HP badge: show combined or per-unit summary
     if (count === 1) {
       if(units[0].n_of_figures > 1){
-        hp.textContent = `[${units[0].n_of_figures}] hp ${units[0].hp} `;
+        hp.textContent = `${units[0].n_of_figures}💂${units[0].hp}💚`;
       } else
-        hp.textContent = `hp ${units[0].hp}`;
+        hp.textContent = `${units[0].hp}💚`;
 
       if (actedUnits.has(units[0].id)){
-        hp.textContent += ' ⛔';
+        hp.textContent += '⛔';
       }
     } else {
       //hp.textContent = units.map(u => u.hp).join('/');
